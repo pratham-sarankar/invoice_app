@@ -1,0 +1,628 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import '../models/item.dart';
+import 'create_item_screen.dart';
+
+class ItemsScreen extends StatefulWidget {
+  const ItemsScreen({super.key});
+
+  @override
+  State<ItemsScreen> createState() => _ItemsScreenState();
+}
+
+class _ItemsScreenState extends State<ItemsScreen> {
+  // Theme colors
+  static const Color primaryColor = Color(0xFF2E3085);
+  static const Color secondaryColor = Color(0xFF4E4AA8);
+
+  List<Item> _items = [];
+  String _selectedCategory = 'All Items';
+  String _selectedStockFilter = 'All';
+  String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadItems();
+  }
+
+  void _loadItems() {
+    // Sample data
+    _items = [
+      Item(
+        id: '1',
+        name: 'Margherita Pizza',
+        description: 'Classic Margherita Pizza',
+        salesPrice: 12.99,
+        purchasePrice: 8.99,
+        category: 'Pizza',
+        unit: 'pieces',
+        stockQuantity: 50,
+        createdAt: DateTime.now(),
+      ),
+      Item(
+        id: '2',
+        name: 'Chicken Burger',
+        description: 'Grilled Chicken Burger',
+        salesPrice: 8.99,
+        purchasePrice: 5.99,
+        category: 'Burgers',
+        unit: 'pieces',
+        stockQuantity: 30,
+        createdAt: DateTime.now(),
+      ),
+      Item(
+        id: '3',
+        name: 'French Fries',
+        description: 'Crispy French Fries',
+        salesPrice: 4.99,
+        purchasePrice: 2.99,
+        category: 'Sides',
+        unit: 'servings',
+        stockQuantity: 100,
+        createdAt: DateTime.now(),
+      ),
+      Item(
+        id: '4',
+        name: 'Coca Cola',
+        description: 'Refreshing Coca Cola',
+        salesPrice: 2.99,
+        purchasePrice: 1.99,
+        category: 'Beverages',
+        unit: 'bottles',
+        stockQuantity: 200,
+        createdAt: DateTime.now(),
+      ),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final filteredItems = _getFilteredItems();
+    
+    return Scaffold(
+      backgroundColor: const Color(0xFFFAFBFC),
+      appBar: _buildAppBar(),
+      body: Column(
+        children: [
+          _buildFilters(),
+          Expanded(
+            child: filteredItems.isEmpty
+                ? _buildEmptyState()
+                : _buildItemsList(filteredItems),
+          ),
+        ],
+      ),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: primaryColor.withOpacity(0.2),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CreateItemScreen()),
+            );
+          },
+          backgroundColor: primaryColor,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          extendedPadding: const EdgeInsets.symmetric(horizontal: 20),
+          icon: const Icon(
+            Icons.add_circle_outline,
+            size: 20,
+            color: Colors.white,
+          ),
+          label: const Text(
+            'Create New Item',
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.3,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(kToolbarHeight),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            bottom: BorderSide(color: Colors.grey.withOpacity(0.2), width: 1),
+          ),
+        ),
+        child: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text(
+            'Items',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              letterSpacing: 0.1,
+              color: Colors.black87,
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search, color: Colors.grey, size: 24),
+              onPressed: () {
+                // Handle search
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilters() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      color: Colors.white,
+      child: Row(
+        children: [
+          // Low Stock Toggle
+          FilterChip(
+            label: const Text(
+              'Low Stock',
+              style: TextStyle(fontSize: 13),
+            ),
+            selected: false, // This state variable is not used in the new code
+            onSelected: (bool value) {
+              // setState(() {
+              //   _showLowStock = value;
+              // });
+            },
+            backgroundColor: Colors.white,
+            selectedColor: primaryColor.withOpacity(0.1),
+            checkmarkColor: primaryColor,
+            labelStyle: TextStyle(
+              color: false ? primaryColor : Colors.grey[800], // This state variable is not used in the new code
+              fontWeight:
+                  false ? FontWeight.w500 : FontWeight.normal, // This state variable is not used in the new code
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: BorderSide(
+                color:
+                    false
+                        ? primaryColor
+                        : Colors.grey.withOpacity(0.3), // This state variable is not used in the new code
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          // Category Dropdown
+          Expanded(
+            child: Container(
+              height: 32,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: _selectedCategory,
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                  iconSize: 20,
+                  elevation: 1,
+                  isExpanded: true,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 13,
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedCategory = newValue!;
+                    });
+                  },
+                  items:
+                      <String>[
+                        'All Items',
+                        'Food',
+                        'Beverages',
+                        'Desserts',
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          // Filter Button
+          InkWell(
+            onTap: () {
+              _showFilterDialog(context);
+            },
+            child: Container(
+              height: 32,
+              width: 70,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.tune, size: 18, color: Colors.grey[700]),
+                  const SizedBox(width: 4),
+                  Text(
+                    'All',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildItemsList(List<Item> items) {
+    return ListView.builder(
+      itemCount: items.length,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      itemBuilder: (context, index) {
+        final item = items[index];
+        return _buildItemCard(item);
+      },
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Text(
+        'No items found. Add a new item!',
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.grey[600],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildItemCard(Item item) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {},
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'S',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.name,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      item.description,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    '${item.salesPrice}',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    item.unit,
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Sales Price',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '₹ ${item.salesPrice}',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[900],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 24),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Purchase Price',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '₹ ${item.purchasePrice}',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[900],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[50],
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Icon(
+                        Icons.tune,
+                        size: 18,
+                        color: Colors.grey[400],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showFilterDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Sort by',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 16),
+                  Wrap(
+                    spacing: 8,
+                    children:
+                        [
+                              'A-Z',
+                              'Z-A',
+                              'Price: Low to High',
+                              'Price: High to Low',
+                            ]
+                            .map(
+                              (sort) => ChoiceChip(
+                                label: Text(sort),
+                                selected: false, // This state variable is not used in the new code
+                                onSelected: (bool selected) {
+                                  // if (selected) {
+                                  //   setState(() {
+                                  //     _sortBy = sort;
+                                  //   });
+                                  //   this.setState(() {});
+                                  // }
+                                },
+                              ),
+                            )
+                            .toList(),
+                  ),
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Filter by',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 16),
+                  Wrap(
+                    spacing: 8,
+                    children:
+                        ['All Items', 'Low Stock', 'In Stock', 'Not in Stock']
+                            .map(
+                              (filter) => ChoiceChip(
+                                label: Text(filter),
+                                selected: false, // This state variable is not used in the new code
+                                onSelected: (bool selected) {
+                                  // if (selected) {
+                                  //   setState(() {
+                                  //     _stockFilter = filter;
+                                  //   });
+                                  //   this.setState(() {});
+                                  // }
+                                },
+                              ),
+                            )
+                            .toList(),
+                  ),
+                  const SizedBox(height: 16),
+                  SwitchListTile(
+                    title: const Text('In Online Store'),
+                    value: false, // This state variable is not used in the new code
+                    onChanged: (bool value) {
+                      // setState(() {
+                      //   _isOnlineStore = value;
+                      // });
+                      this.setState(() {});
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  List<Item> _getFilteredItems() {
+    List<Item> filteredItems = List.from(_items);
+
+    // Apply category filter
+    if (_selectedCategory != 'All Items') {
+      filteredItems =
+          filteredItems
+              .where((item) => item.category == _selectedCategory)
+              .toList();
+    }
+
+    // Apply stock filter
+    // switch (_stockFilter) { // This state variable is not used in the new code
+    //   case 'Low Stock':
+    //     filteredItems = filteredItems.where((item) => item.isLowStock).toList();
+    //     break;
+    //   case 'In Stock':
+    //     filteredItems =
+    //         filteredItems.where((item) => item.stockQuantity > 0).toList();
+    //     break;
+    //   case 'Not in Stock':
+    //     filteredItems =
+    //         filteredItems.where((item) => item.stockQuantity <= 0).toList();
+    //     break;
+    // }
+
+    // Apply online store filter
+    // if (_isOnlineStore) { // This state variable is not used in the new code
+    //   // Add your online store filtering logic here
+    //   // For example: filteredItems = filteredItems.where((item) => item.isOnlineEnabled).toList();
+    // }
+
+    // Apply sorting
+    // switch (_sortBy) { // This state variable is not used in the new code
+    //   case 'A-Z':
+    //     filteredItems.sort((a, b) => a.name.compareTo(b.name));
+    //     break;
+    //   case 'Z-A':
+    //     filteredItems.sort((a, b) => b.name.compareTo(a.name));
+    //     break;
+    //   case 'Price: Low to High':
+    //     filteredItems.sort((a, b) => a.salesPrice.compareTo(b.salesPrice));
+    //     break;
+    //   case 'Price: High to Low':
+    //     filteredItems.sort((a, b) => b.salesPrice.compareTo(a.salesPrice));
+    //     break;
+    // }
+
+    return filteredItems;
+  }
+
+  @override
+  void dispose() {
+    // _searchController.dispose(); // This controller is not used in the new code
+    super.dispose();
+  }
+}
