@@ -15,12 +15,11 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   static const Color backgroundColor = Color(0xFFFAFBFC);
   static const Color cardColor = Colors.white;
 
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final FocusNode phoneFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
-  bool _isPasswordVisible = false;
   bool _isLoading = false;
-  bool _rememberMe = false;
+  bool _isPhoneValid = false;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -51,31 +50,47 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
     ));
     
     _animationController.forward();
+    
+    // Listen to phone number changes
+    phoneController.addListener(_validatePhone);
+  }
+
+  void _validatePhone() {
+    final phone = phoneController.text.replaceAll(RegExp(r'[^\d]'), '');
+    setState(() {
+      _isPhoneValid = phone.length == 10;
+    });
+    
+    // Auto unfocus when 10 digits are entered
+    if (phone.length == 10) {
+      phoneFocusNode.unfocus();
+    }
   }
 
   @override
   void dispose() {
     _animationController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
+    phoneController.dispose();
+    phoneFocusNode.dispose();
     super.dispose();
   }
 
-  void _handleLogin() async {
+  void _handleSendOTP() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
       _isLoading = true;
     });
 
-    // Simulate login process
+    // Simulate OTP sending process
     await Future.delayed(Duration(seconds: 2));
 
     setState(() {
       _isLoading = false;
     });
 
-    Navigator.pushReplacementNamed(context, '/main');
+    // Navigate to OTP verification screen with +91 prefix
+    Navigator.pushNamed(context, '/otp-verification', arguments: '+91${phoneController.text}');
   }
 
   @override
@@ -90,58 +105,58 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
         body: SafeArea(
           child: Column(
             children: [
-                           // Header Section
-               Container(
-                 width: double.infinity,
-                 height: size.height * 0.28,
-                 decoration: BoxDecoration(
-                   gradient: LinearGradient(
-                     begin: Alignment.topLeft,
-                     end: Alignment.bottomRight,
-                     colors: [
-                       primaryColor,
-                       secondaryColor,
-                     ],
-                   ),
-                 ),
-                 child: FadeTransition(
-                   opacity: _fadeAnimation,
-                   child: Column(
-                     mainAxisAlignment: MainAxisAlignment.center,
-                     children: [
-                       Container(
-                         padding: EdgeInsets.all(12),
-                         decoration: BoxDecoration(
-                           color: Colors.white.withOpacity(0.2),
-                           borderRadius: BorderRadius.circular(16),
-                         ),
-                         child: Icon(
-                           Icons.restaurant_menu,
-                           size: 36,
-                           color: Colors.white,
-                         ),
-                       ),
-                       SizedBox(height: 12),
-                       Text(
-                         'Act T Connect GST Invoice',
-                         style: theme.textTheme.titleLarge?.copyWith(
-                           fontWeight: FontWeight.w700,
-                           color: Colors.white,
-                           letterSpacing: 0.3,
-                         ),
-                       ),
-                       SizedBox(height: 4),
-                       Text(
-                         'Professional Invoice Management',
-                         style: theme.textTheme.bodyMedium?.copyWith(
-                           color: Colors.white.withOpacity(0.9),
-                           fontWeight: FontWeight.w400,
-                         ),
-                       ),
-                     ],
-                   ),
-                 ),
-               ),
+              // Header Section
+              Container(
+                width: double.infinity,
+                height: size.height * 0.28,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      primaryColor,
+                      secondaryColor,
+                    ],
+                  ),
+                ),
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Icon(
+                          Icons.restaurant_menu,
+                          size: 36,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      Text(
+                        'Act T Connect GST Invoice',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'Professional Invoice Management',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white.withOpacity(0.9),
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               
               // Login Form Section
               Expanded(
@@ -160,210 +175,125 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                           ),
                         ],
                       ),
-                                           child: SingleChildScrollView(
-                         padding: EdgeInsets.all(20),
-                         child: Form(
-                           key: _formKey,
-                           child: Column(
-                             crossAxisAlignment: CrossAxisAlignment.start,
-                             children: [
-                               Text(
-                                 'Welcome Back',
-                                 style: theme.textTheme.titleLarge?.copyWith(
-                                   fontWeight: FontWeight.w700,
-                                   color: Colors.black87,
-                                 ),
-                               ),
-                               SizedBox(height: 6),
-                               Text(
-                                 'Sign in to continue to your dashboard',
-                                 style: theme.textTheme.bodyMedium?.copyWith(
-                                   color: Colors.grey[600],
-                                 ),
-                               ),
-                               SizedBox(height: 20),
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.all(20),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Welcome Back',
+                                style: theme.textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              SizedBox(height: 6),
+                              Text(
+                                'Enter your phone number to continue',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              SizedBox(height: 20),
                               
-                              // Email Field
-                              TextFormField(
-                                controller: emailController,
-                                keyboardType: TextInputType.emailAddress,
+                                                             // Phone Number Field
+                               TextFormField(
+                                 controller: phoneController,
+                                 focusNode: phoneFocusNode,
+                                 keyboardType: TextInputType.number,
+                                 textInputAction: TextInputAction.done,
+                                 inputFormatters: [
+                                   FilteringTextInputFormatter.digitsOnly,
+                                   LengthLimitingTextInputFormatter(10),
+                                 ],
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter your email';
+                                    return 'Please enter your phone number';
                                   }
-                                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                                    return 'Please enter a valid email';
+                                  if (value.length != 10) {
+                                    return 'Please enter a valid 10-digit phone number';
                                   }
                                   return null;
                                 },
-                                decoration: InputDecoration(
-                                  labelText: 'Email Address',
-                                  hintText: 'Enter your email',
-                                  prefixIcon: Icon(
-                                    Icons.email_outlined,
-                                    color: primaryColor,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Colors.grey[300]!),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Colors.grey[300]!),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: primaryColor, width: 2),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Colors.red[300]!),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.grey[50],
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 14,
-                                    vertical: 14,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 14),
-                              
-                              // Password Field
-                              TextFormField(
-                                controller: passwordController,
-                                obscureText: !_isPasswordVisible,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your password';
-                                  }
-                                  if (value.length < 6) {
-                                    return 'Password must be at least 6 characters';
-                                  }
-                                  return null;
-                                },
-                                decoration: InputDecoration(
-                                  labelText: 'Password',
-                                  hintText: 'Enter your password',
-                                  prefixIcon: Icon(
-                                    Icons.lock_outline,
-                                    color: primaryColor,
-                                  ),
-                                  suffixIcon: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _isPasswordVisible = !_isPasswordVisible;
-                                      });
-                                    },
-                                    icon: Icon(
-                                      _isPasswordVisible 
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Colors.grey[300]!),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Colors.grey[300]!),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: primaryColor, width: 2),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(color: Colors.red[300]!),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.grey[50],
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 14,
-                                    vertical: 14,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              
-                              // Remember Me & Forgot Password
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Checkbox(
-                                        value: _rememberMe,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _rememberMe = value ?? false;
-                                          });
-                                        },
-                                        activeColor: primaryColor,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(4),
-                                        ),
-                                      ),
-                                      Text(
-                                        'Remember me',
-                                        style: theme.textTheme.bodyMedium?.copyWith(
-                                          color: Colors.grey[700],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      // Handle forgot password
-                                    },
-                                    child: Text(
-                                      'Forgot Password?',
-                                      style: theme.textTheme.bodyMedium?.copyWith(
-                                        color: primaryColor,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                                                           SizedBox(height: 20),
-                               
-                               // Login Button
-                               SizedBox(
-                                 width: double.infinity,
-                                 height: 48,
-                                 child: ElevatedButton(
-                                   onPressed: _isLoading ? null : _handleLogin,
-                                   style: ElevatedButton.styleFrom(
-                                     backgroundColor: primaryColor,
-                                     foregroundColor: Colors.white,
-                                     elevation: 0,
-                                     shape: RoundedRectangleBorder(
-                                       borderRadius: BorderRadius.circular(10),
-                                     ),
-                                     shadowColor: primaryColor.withOpacity(0.3),
+                                                                                                   decoration: InputDecoration(
+                                   labelText: 'Phone Number',
+                                   hintText: 'Enter your 10-digit phone number',
+                                   hintStyle: TextStyle(
+                                     fontSize: 14,
+                                     color: Colors.grey[500],
                                    ),
-                                   child: _isLoading
-                                       ? SizedBox(
-                                           height: 18,
-                                           width: 18,
-                                           child: CircularProgressIndicator(
-                                             strokeWidth: 2,
-                                             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                           ),
-                                         )
-                                       : Text(
-                                           'Sign In',
-                                           style: theme.textTheme.titleMedium?.copyWith(
-                                             fontWeight: FontWeight.w600,
-                                             color: Colors.white,
-                                           ),
-                                         ),
-                                 ),
-                               ),
-                               SizedBox(height: 16),
+                                   prefixIcon: Icon(
+                                     Icons.phone_outlined,
+                                     color: primaryColor,
+                                   ),
+                                   prefixText: '+91 ',
+                                   prefixStyle: TextStyle(
+                                     fontSize: 16,
+                                     fontWeight: FontWeight.w600,
+                                     color: Colors.black87,
+                                   ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(color: Colors.grey[300]!),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(color: Colors.grey[300]!),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(color: primaryColor, width: 2),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(color: Colors.red[300]!),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.grey[50],
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 14,
+                                    vertical: 14,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              
+                              // Send OTP Button
+                              SizedBox(
+                                width: double.infinity,
+                                height: 48,
+                                child: ElevatedButton(
+                                  onPressed: _isLoading || !_isPhoneValid ? null : _handleSendOTP,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: primaryColor,
+                                    foregroundColor: Colors.white,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    shadowColor: primaryColor.withOpacity(0.3),
+                                  ),
+                                  child: _isLoading
+                                      ? SizedBox(
+                                          height: 18,
+                                          width: 18,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                          ),
+                                        )
+                                      : Text(
+                                          'Send OTP',
+                                          style: theme.textTheme.titleMedium?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                ),
+                              ),
+                              SizedBox(height: 16),
                               
                               // Divider
                               Row(
@@ -383,31 +313,31 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                               ),
                               SizedBox(height: 20),
                               
-                                                           // Demo Login Button
-                               SizedBox(
-                                 width: double.infinity,
-                                 height: 44,
-                                 child: OutlinedButton.icon(
-                                   onPressed: _isLoading ? null : () {
-                                     Navigator.pushReplacementNamed(context, '/main');
-                                   },
-                                   style: OutlinedButton.styleFrom(
-                                     foregroundColor: primaryColor,
-                                     side: BorderSide(color: primaryColor),
-                                     shape: RoundedRectangleBorder(
-                                       borderRadius: BorderRadius.circular(10),
-                                     ),
-                                   ),
-                                   icon: Icon(Icons.play_arrow, size: 18),
-                                   label: Text(
-                                     'Demo Login',
-                                     style: theme.textTheme.titleMedium?.copyWith(
-                                       fontWeight: FontWeight.w600,
-                                     ),
-                                   ),
-                                 ),
-                               ),
-                               SizedBox(height: 12),
+                              // Demo Login Button
+                              SizedBox(
+                                width: double.infinity,
+                                height: 44,
+                                child: OutlinedButton.icon(
+                                  onPressed: _isLoading ? null : () {
+                                    Navigator.pushReplacementNamed(context, '/main');
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: primaryColor,
+                                    side: BorderSide(color: primaryColor),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  icon: Icon(Icons.play_arrow, size: 18),
+                                  label: Text(
+                                    'Demo Login',
+                                    style: theme.textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 12),
                             ],
                           ),
                         ),

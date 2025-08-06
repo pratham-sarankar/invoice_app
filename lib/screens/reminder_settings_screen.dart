@@ -73,14 +73,14 @@ class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildPartyRemindersSection(),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
                 _buildYourRemindersSection(),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
                 _buildWhatsappReminderSection(),
               ],
             ),
@@ -186,12 +186,12 @@ class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
         Text(
           title,
           style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
             color: Color(0xFF1A1A1A),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
             border: Border.all(
@@ -227,10 +227,10 @@ class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
     required ValueChanged<bool> onChanged,
   }) {
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       leading: Container(
-        width: 32,
-        height: 32,
+        width: 28,
+        height: 28,
         decoration: BoxDecoration(
           color: iconColor.withOpacity(0.1),
           borderRadius: BorderRadius.circular(6),
@@ -238,13 +238,13 @@ class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
         child: Icon(
           icon,
           color: iconColor,
-          size: 18,
+          size: 16,
         ),
       ),
       title: Text(
         title,
         style: const TextStyle(
-          fontSize: 14,
+          fontSize: 13,
           fontWeight: FontWeight.w500,
           color: Color(0xFF1A1A1A),
         ),
@@ -253,18 +253,30 @@ class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
           ? Text(
               subtitle,
               style: const TextStyle(
-                fontSize: 12,
+                fontSize: 11,
                 color: Color(0xFF6C757D),
               ),
             )
           : null,
-      trailing: Switch(
-        value: value,
-        onChanged: onChanged,
-        activeColor: primaryColor,
-        activeTrackColor: primaryColor.withOpacity(0.3),
-        inactiveThumbColor: Colors.grey[400],
-        inactiveTrackColor: Colors.grey[300],
+      trailing: Transform.scale(
+        scale: 0.8,
+        child: Switch(
+          value: value,
+          onChanged: onChanged,
+          activeColor: primaryColor,
+          activeTrackColor: primaryColor.withOpacity(0.2),
+          inactiveThumbColor: Colors.white,
+          inactiveTrackColor: const Color(0xFFE0E0E0),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          overlayColor: MaterialStateProperty.resolveWith<Color?>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.pressed)) {
+                return primaryColor.withOpacity(0.1);
+              }
+              return null;
+            },
+          ),
+        ),
       ),
     );
   }

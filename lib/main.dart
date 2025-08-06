@@ -13,6 +13,7 @@ import 'package:invoice_app/screens/splash_screen.dart';
 import 'package:invoice_app/screens/subscription_screen.dart';
 import 'package:invoice_app/screens/account_settings.dart';
 import 'package:invoice_app/screens/reminder_settings_screen.dart';
+import 'package:invoice_app/screens/otp_verification_screen.dart';
 
 void main() {
   runApp(RestaurantInvoiceApp());
@@ -144,6 +145,10 @@ class _RestaurantInvoiceAppState extends State<RestaurantInvoiceApp> {
         '/account-settings': (context) => const AccountSettingsScreen(),
         '/reminder-settings': (context) => const ReminderSettingsScreen(),
         '/about': (context) => const AboutScreen(),
+        '/otp-verification': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as String?;
+          return OTPVerificationScreen(phoneNumber: args ?? '');
+        },
         '/settings':
             (context) => SettingsScreen(
               onThemeToggle: _toggleTheme,

@@ -14,8 +14,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   static const Color secondaryColor = Color(0xFF4E4AA8);
   
   // Controllers for text fields
-  final TextEditingController _nameController = TextEditingController(text: 'Yash shaft');
-  final TextEditingController _mobileController = TextEditingController(text: '8085042656');
+  final TextEditingController _nameController = TextEditingController(text: 'User Name');
+  final TextEditingController _mobileController = TextEditingController(text: '1234567890');
   
   // State variables
   bool _appLockEnabled = false;
@@ -264,15 +264,29 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               ],
             ),
           ),
-          Switch(
-            value: _appLockEnabled,
-            onChanged: (value) {
-              setState(() {
-                _appLockEnabled = value;
-              });
-            },
-            activeColor: primaryColor,
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          Transform.scale(
+            scale: 0.8,
+            child: Switch(
+              value: _appLockEnabled,
+              onChanged: (value) {
+                setState(() {
+                  _appLockEnabled = value;
+                });
+              },
+              activeColor: primaryColor,
+              activeTrackColor: primaryColor.withOpacity(0.2),
+              inactiveThumbColor: Colors.white,
+              inactiveTrackColor: const Color(0xFFE0E0E0),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.pressed)) {
+                    return primaryColor.withOpacity(0.1);
+                  }
+                  return null;
+                },
+              ),
+            ),
           ),
         ],
       ),
