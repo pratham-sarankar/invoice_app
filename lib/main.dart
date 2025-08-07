@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:invoice_app/screens/about_screen.dart';
 import 'package:invoice_app/screens/business_profile_screen.dart';
 import 'package:invoice_app/screens/create_invoice.dart';
+import 'package:invoice_app/screens/create_purchase_screen.dart';
 import 'package:invoice_app/screens/dashboard.dart';
 import 'package:invoice_app/screens/invite_earn_screen.dart';
 import 'package:invoice_app/screens/invoice_settings.dart';
@@ -16,6 +17,9 @@ import 'package:invoice_app/screens/subscription_screen.dart';
 import 'package:invoice_app/screens/account_settings.dart';
 import 'package:invoice_app/screens/reminder_settings_screen.dart';
 import 'package:invoice_app/screens/otp_verification_screen.dart';
+import 'package:invoice_app/screens/purchase_screen.dart';
+import 'package:invoice_app/screens/upload_bill_screen.dart';
+import 'package:invoice_app/screens/manage_companies_screen.dart';
 
 void main() {
   runApp(RestaurantInvoiceApp());
@@ -201,7 +205,6 @@ class _RestaurantInvoiceAppState extends State<RestaurantInvoiceApp> {
         '/login': (context) => LoginScreen(),
         '/main': (context) => MainScreen(),
         '/home': (context) => HomeDashboard(onThemeToggle: _toggleTheme),
-        '/menu-management': (context) => MenuManagementScreen(),
         '/sales-report': (context) => SalesReportScreen(),
         '/create-invoice': (context) => const CreateInvoiceScreen(),
         '/invoice-preview': (context) => InvoicePreviewScreen(),
@@ -221,6 +224,10 @@ class _RestaurantInvoiceAppState extends State<RestaurantInvoiceApp> {
               onThemeToggle: _toggleTheme,
               themeMode: _themeMode,
             ),
+        '/purchase': (context) => const PurchaseScreen(),
+        '/upload-bill': (context) => const UploadBillScreen(),
+        '/create-purchase': (context) => const CreatePurchaseScreen(),
+        '/manage-companies': (context) => const ManageCompaniesScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

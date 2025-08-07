@@ -82,103 +82,140 @@ class _HomeDashboardState extends State<HomeDashboard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.today,
-                    color: primaryColor,
-                    size: isTablet ? 20 : 16, // Smaller icon
-                  ),
-                  SizedBox(width: 6), // Less spacing
-                  Text(
-                    'Daily Overview',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.1,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              // --- Dashboard Cards Section (like screenshot) ---
+              // --- Dashboard Cards Section (3x2 grid) ---
               GridView.count(
-                crossAxisCount: isTablet ? 3 : 2,
+                crossAxisCount: 2,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 childAspectRatio: 2.3,
                 children: [
-                  // To Collect Card (no icon, price first, then label)
-                  _CompactDashboardCard(
-                    icon: null, // No icon
-                    title: '', // No title at top
-                    value: '₹ 0',
-                    color: Colors.green[100]!,
-                    subtitle: 'To Collect',
-                    small: true,
-                    rightArrow: true,
-                    valueColor: Colors.green[900],
-                  ),
-                  // To Pay Card (no icon, price first, then label)
-                  _CompactDashboardCard(
-                    icon: null, // No icon
-                    title: '', // No title at top
-                    value: '₹ 0',
-                    color: Colors.red[100]!,
-                    subtitle: 'To Pay',
-                    small: true,
-                    rightArrow: true,
-                    valueColor: Colors.red[900],
-                  ),
-                  _CompactDashboardCard(
-                    icon: null,
-                    title: '',
-                    value: '₹ 0',
-                    color: Colors.blue[100]!,
-                    subtitle: "This week's sale",
-                    small: true,
-                    rightArrow: true,
-                    valueColor: Colors.blue[900],
-                  ),
-                  _CompactDashboardCard(
-                    icon: null,
-                    title: '',
-                    value: 'Total Balance',
-                    color: Colors.blueGrey[100]!,
-                    subtitle: 'Cash + Bank',
-                    small: true,
-                    rightArrow: true,
-                    valueColor: Colors.blueGrey[900],
-                  ),
-                  _CompactDashboardCard(
-                    icon: null,
-                    title: '',
-                    value: 'Reports',
-                    color: Colors.blueGrey[100]!,
-                    subtitle: 'Sales, Party, GST',
-                    small: true,
-                    rightArrow: true,
-                    valueColor: Colors.blueGrey[900],
-                  ),
+                                     // To Collect Card (Green)
+                   _CompactDashboardCard(
+                     icon: null,
+                     title: '',
+                     value: '₹ 440',
+                     color: Colors.green[100]!,
+                     subtitle: 'To Collect',
+                     small: true,
+                     rightArrow: true,
+                     valueColor: Colors.green[900],
+                     showArrow: true,
+                     arrowDirection: 'down',
+                     primaryColor: primaryColor,
+                   ),
+                   // To Pay Card (Red)
+                   _CompactDashboardCard(
+                     icon: null,
+                     title: '',
+                     value: '₹ 0',
+                     color: Colors.red[100]!,
+                     subtitle: 'To Pay',
+                     small: true,
+                     rightArrow: true,
+                     valueColor: Colors.red[900],
+                     showArrow: true,
+                     arrowDirection: 'up',
+                     primaryColor: primaryColor,
+                   ),
+                   // Purchase Card
+                   GestureDetector(
+                     onTap: () => Navigator.pushNamed(context, '/purchase'),
+                     child: _CompactDashboardCard(
+                       icon: null,
+                       title: '',
+                       value: 'Purchase',
+                       color: primaryColor.withOpacity(0.1),
+                       subtitle: 'Value of Items',
+                       small: true,
+                       rightArrow: true,
+                       valueColor: primaryColor,
+                       primaryColor: primaryColor,
+                     ),
+                   ),
+                   // This week's sale Card
+                   _CompactDashboardCard(
+                     icon: null,
+                     title: '',
+                     value: '₹ 440',
+                     color: primaryColor.withOpacity(0.1),
+                     subtitle: "This week's sale",
+                     small: true,
+                     rightArrow: true,
+                     valueColor: primaryColor,
+                     primaryColor: primaryColor,
+                   ),
+                   // Total Balance Card
+                   _CompactDashboardCard(
+                     icon: null,
+                     title: '',
+                     value: 'Total Balance',
+                     color: primaryColor.withOpacity(0.1),
+                     subtitle: 'Cash + Bank Balance',
+                     small: true,
+                     rightArrow: true,
+                     valueColor: primaryColor,
+                     primaryColor: primaryColor,
+                   ),
+                   // Reports Card
+                   _CompactDashboardCard(
+                     icon: null,
+                     title: '',
+                     value: 'Reports',
+                     color: primaryColor.withOpacity(0.1),
+                     subtitle: 'Sales, Party, GST...',
+                     small: true,
+                     rightArrow: true,
+                     valueColor: primaryColor,
+                     primaryColor: primaryColor,
+                   ),
                 ],
               ),
               SizedBox(height: 18),
+              
+              // Reports Section with Crown
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.workspace_premium,
+                      color: Colors.amber[600],
+                      size: 20,
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'View unlimited reports',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                      color: Colors.grey[500],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 18),
+              
               // Transactions Section Header
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.receipt_long,
-                    color: primaryColor,
-                    size: isTablet ? 20 : 16,
-                  ),
-                  SizedBox(width: 6),
                   Text(
-                    'Recent Transactions',
+                    'Transactions',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.black87,
@@ -187,273 +224,68 @@ class _HomeDashboardState extends State<HomeDashboard> {
                     ),
                   ),
                   Spacer(),
-                  TextButton(
-                    onPressed: () {
-                      // TODO: Navigate to transactions list
-                    },
-                    child: Text(
-                      'View All',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: primaryColor,
-                        fontWeight: FontWeight.w600,
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today,
+                        color: Colors.grey[600],
+                        size: 16,
                       ),
-                    ),
+                      SizedBox(width: 4),
+                      Text(
+                        'LAST 365 DAYS',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
               SizedBox(height: 10),
-              // Transactions List
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.05),
-                      blurRadius: 8,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                  border: Border.all(
-                    color: Colors.grey.withOpacity(0.15),
-                    width: 1,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    // Sample Transaction Items
-                    _TransactionItem(
-                      title: 'Table 4',
-                      amount: '₹ 450',
-                      time: '2:30 PM',
-                      isCredit: true,
-                      isTablet: isTablet,
-                    ),
-                    Divider(
-                      height: 1,
-                      thickness: 1,
-                      color: Colors.grey.withOpacity(0.1),
-                    ),
-                    _TransactionItem(
-                      title: 'Table 2',
-                      amount: '₹ 850',
-                      time: '1:45 PM',
-                      isCredit: true,
-                      isTablet: isTablet,
-                    ),
-                    Divider(
-                      height: 1,
-                      thickness: 1,
-                      color: Colors.grey.withOpacity(0.1),
-                    ),
-                    _TransactionItem(
-                      title: 'Vendor Payment',
-                      amount: '₹ 2,000',
-                      time: '11:20 AM',
-                      isCredit: false,
-                      isTablet: isTablet,
-                    ),
-                  ],
-                ),
-              ),
-              // SizedBox(height: 18),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: ElevatedButton.icon(
-              //         onPressed:
-              //             () => Navigator.pushNamed(context, '/create-invoice'),
-              //         icon: Icon(
-              //           Icons.add,
-              //           size: isTablet ? 22 : 18,
-              //           color: Colors.white,
-              //         ),
-              //         label: Text(
-              //           'New Invoice',
-              //           style: TextStyle(
-              //             fontSize: isTablet ? 18 : 16,
-              //             fontWeight: FontWeight.bold,
-              //             letterSpacing: 0.1,
-              //             color: Colors.white,
-              //           ),
-              //         ),
-              //         style: ElevatedButton.styleFrom(
-              //           backgroundColor: Colors.deepOrange,
-              //           shape: RoundedRectangleBorder(
-              //             borderRadius: BorderRadius.circular(6),
-              //           ),
-              //           elevation: 0,
-              //           padding: EdgeInsets.symmetric(
-              //             vertical: isTablet ? 16 : 12,
-              //           ),
-              //           textStyle: TextStyle(fontWeight: FontWeight.bold),
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // SizedBox(height: 14),
-              // Section for Menu and Sales
-              // Container(
-              //   width: double.infinity,
-              //   child: Column(
-              //     children: [
-              //       InkWell(
-              //         borderRadius: BorderRadius.circular(14),
-              //         onTap:
-              //             () =>
-              //                 Navigator.pushNamed(context, '/menu-management'),
-              //         child: Container(
-              //           width: double.infinity,
-              //           margin: EdgeInsets.only(bottom: 14),
-              //           padding: EdgeInsets.symmetric(
-              //             vertical: isTablet ? 18 : 14,
-              //             horizontal: isTablet ? 18 : 12,
-              //           ),
-              //           decoration: BoxDecoration(
-              //             color: Colors.white, // Simple white background
-              //             borderRadius: BorderRadius.circular(14),
-              //             boxShadow: [
-              //               BoxShadow(
-              //                 color: Colors.deepOrange.withOpacity(0.07),
-              //                 blurRadius: 8,
-              //                 offset: Offset(0, 2),
-              //               ),
-              //             ],
-              //             border: Border.all(
-              //               color: Colors.deepOrange.withOpacity(0.15),
-              //               width: 1.2,
-              //             ),
-              //           ),
-              //           child: Row(
-              //             children: [
-              //               Container(
-              //                 width: isTablet ? 38 : 32,
-              //                 height: isTablet ? 38 : 32,
-              //                 decoration: BoxDecoration(
-              //                   shape: BoxShape.circle,
-              //                   color: Colors.deepOrange.withOpacity(0.10),
-              //                 ),
-              //                 child: Center(
-              //                   child: Icon(
-              //                     Icons.fastfood,
-              //                     color: Colors.deepOrange,
-              //                     size: isTablet ? 22 : 18,
-              //                   ),
-              //                 ),
-              //               ),
-              //               SizedBox(width: 12),
-              //               Expanded(
-              //                 child: Column(
-              //                   crossAxisAlignment: CrossAxisAlignment.start,
-              //                   children: [
-              //                     Text(
-              //                       'Menu',
-              //                       style: TextStyle(
-              //                         fontWeight: FontWeight.bold,
-              //                         fontSize: isTablet ? 18 : 15,
-              //                         color: Colors.black87,
-              //                       ),
-              //                     ),
-              //                     SizedBox(height: 2),
-              //                     Text(
-              //                       'Edit menu',
-              //                       style: TextStyle(
-              //                         fontSize: isTablet ? 13 : 11,
-              //                         color: Colors.grey[700],
-              //                       ),
-              //                     ),
-              //                   ],
-              //                 ),
-              //               ),
-              //               Icon(
-              //                 Icons.arrow_forward_ios,
-              //                 size: isTablet ? 18 : 14,
-              //                 color: Colors.deepOrange,
-              //               ),
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //       InkWell(
-              //         borderRadius: BorderRadius.circular(14),
-              //         onTap:
-              //             () => Navigator.pushNamed(context, '/sales-report'),
-              //         child: Container(
-              //           width: double.infinity,
-              //           padding: EdgeInsets.symmetric(
-              //             vertical: isTablet ? 18 : 14,
-              //             horizontal: isTablet ? 18 : 12,
-              //           ),
-              //           decoration: BoxDecoration(
-              //             color: Colors.white, // Simple white background
-              //             borderRadius: BorderRadius.circular(14),
-              //             boxShadow: [
-              //               BoxShadow(
-              //                 color: Colors.blue.withOpacity(0.07),
-              //                 blurRadius: 8,
-              //                 offset: Offset(0, 2),
-              //               ),
-              //             ],
-              //             border: Border.all(
-              //               color: Colors.blue.withOpacity(0.15),
-              //               width: 1.2,
-              //             ),
-              //           ),
-              //           child: Row(
-              //             children: [
-              //               Container(
-              //                 width: isTablet ? 38 : 32,
-              //                 height: isTablet ? 38 : 32,
-              //                 decoration: BoxDecoration(
-              //                   shape: BoxShape.circle,
-              //                   color: Colors.blue.withOpacity(0.10),
-              //                 ),
-              //                 child: Center(
-              //                   child: Icon(
-              //                     Icons.bar_chart,
-              //                     color: Colors.blue[700],
-              //                     size: isTablet ? 22 : 18,
-              //                   ),
-              //                 ),
-              //               ),
-              //               SizedBox(width: 12),
-              //               Expanded(
-              //                 child: Column(
-              //                   crossAxisAlignment: CrossAxisAlignment.start,
-              //                   children: [
-              //                     Text(
-              //                       'Sales',
-              //                       style: TextStyle(
-              //                         fontWeight: FontWeight.bold,
-              //                         fontSize: isTablet ? 18 : 15,
-              //                         color: Colors.black87,
-              //                       ),
-              //                     ),
-              //                     SizedBox(height: 2),
-              //                     Text(
-              //                       'Analytics',
-              //                       style: TextStyle(
-              //                         fontSize: isTablet ? 13 : 11,
-              //                         color: Colors.grey[700],
-              //                       ),
-              //                     ),
-              //                   ],
-              //                 ),
-              //               ),
-              //               Icon(
-              //                 Icons.arrow_forward_ios,
-              //                 size: isTablet ? 18 : 14,
-              //                 color: Colors.blue[700],
-              //               ),
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
+              
+                             // Transactions List
+               Column(
+                 children: [
+                   _InvoiceTransactionItem(
+                     customerName: 'Priya Sharma 💫',
+                     invoiceNumber: 'Invoice #5',
+                     dueDate: '06 Aug • 6 day(s) to due',
+                     amount: '₹ 1,250',
+                     status: 'Unpaid',
+                     isTablet: isTablet,
+                   ),
+                   SizedBox(height: 8),
+                   _InvoiceTransactionItem(
+                     customerName: 'Rajesh Kumar 🏢',
+                     invoiceNumber: 'Invoice #4',
+                     dueDate: '05 Aug • 5 day(s) to due',
+                     amount: '₹ 3,450',
+                     status: 'Paid',
+                     isTablet: isTablet,
+                   ),
+                   SizedBox(height: 8),
+                   _InvoiceTransactionItem(
+                     customerName: 'Anita Patel 🌟',
+                     invoiceNumber: 'Invoice #6',
+                     dueDate: '07 Aug • 7 day(s) to due',
+                     amount: '₹ 890',
+                     status: 'Unpaid',
+                     isTablet: isTablet,
+                   ),
+                   SizedBox(height: 8),
+                   _InvoiceTransactionItem(
+                     customerName: 'Vikram Singh 💼',
+                     invoiceNumber: 'Invoice #7',
+                     dueDate: '08 Aug • 8 day(s) to due',
+                     amount: '₹ 2,100',
+                     status: 'Overdue',
+                     isTablet: isTablet,
+                   ),
+                 ],
+               ),
             ],
           ),
         ),
@@ -571,218 +403,120 @@ class _HomeDashboardState extends State<HomeDashboard> {
   }
 }
 
-// Update _CompactDashboardCard to allow icon to be nullable and render cards without icon or title for To Collect and To Pay
-class _CompactDashboardCard extends StatelessWidget {
-  final IconData? icon;
-  final String title;
-  final String value;
-  final Color color;
-  final String? subtitle;
-  final bool small;
-  final bool rightArrow;
-  final Color? valueColor;
+// Update _CompactDashboardCard to support arrow indicators
+ class _CompactDashboardCard extends StatelessWidget {
+   final IconData? icon;
+   final String title;
+   final String value;
+   final Color color;
+   final String? subtitle;
+   final bool small;
+   final bool rightArrow;
+   final Color? valueColor;
+   final bool showArrow;
+   final String arrowDirection;
+   final Color primaryColor;
 
-  const _CompactDashboardCard({
-    this.icon,
-    required this.title,
-    required this.value,
-    required this.color,
-    this.subtitle,
-    this.small = false,
-    this.rightArrow = false,
-    this.valueColor,
-  });
+     const _CompactDashboardCard({
+     this.icon,
+     required this.title,
+     required this.value,
+     required this.color,
+     this.subtitle,
+     this.small = false,
+     this.rightArrow = false,
+     this.valueColor,
+     this.showArrow = false,
+     this.arrowDirection = 'down',
+     required this.primaryColor,
+   });
 
   @override
   Widget build(BuildContext context) {
-    final double iconSize = small ? 16 : 22;
-    final double titleSize = small ? 13 : 15;
     final double valueSize = small ? 15 : 18;
     final double subtitleSize = small ? 10 : 12;
     final double paddingV = small ? 10 : 16;
     final double paddingH = small ? 10 : 16;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.08),
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
-        ],
-        border: Border.all(color: color.withOpacity(0.18), width: 1.2),
-      ),
+         return Container(
+       decoration: BoxDecoration(
+         color: color,
+         borderRadius: BorderRadius.circular(14),
+         boxShadow: [
+           BoxShadow(
+             color: color.withOpacity(0.15),
+             blurRadius: 8,
+             offset: Offset(0, 2),
+           ),
+         ],
+         border: Border.all(color: color.withOpacity(0.2), width: 1.2),
+       ),
       padding: EdgeInsets.symmetric(vertical: paddingV, horizontal: paddingH),
       constraints: BoxConstraints(minHeight: 72),
-      child:
-          title.isEmpty
-              ? Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          value,
-                          style: TextStyle(
-                            fontSize: valueSize,
-                            fontWeight: FontWeight.bold,
-                            color: valueColor ?? color,
-                            letterSpacing: 0.2,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        if (subtitle != null && subtitle!.isNotEmpty) ...[
-                          SizedBox(height: 2),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                subtitle!,
-                                style: TextStyle(
-                                  fontSize: subtitleSize,
-                                  fontWeight:
-                                      (subtitle == 'To Collect' ||
-                                              subtitle == 'To Pay')
-                                          ? FontWeight.w600
-                                          : FontWeight.normal,
-                                  color:
-                                      subtitle == 'To Collect'
-                                          ? Colors.green[700]
-                                          : subtitle == 'To Pay'
-                                          ? Colors.red[700]
-                                          : Colors.grey[600],
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              if (subtitle == 'To Collect')
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 4),
-                                  child: Icon(
-                                    Icons.arrow_downward,
-                                    size: 12,
-                                    color: Colors.green[700],
-                                  ),
-                                )
-                              else if (subtitle == 'To Pay')
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 4),
-                                  child: Icon(
-                                    Icons.arrow_upward,
-                                    size: 12,
-                                    color: Colors.red[700],
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ],
-                      ],
-                    ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: valueSize,
+                    fontWeight: FontWeight.bold,
+                    color: valueColor ?? color,
+                    letterSpacing: 0.2,
                   ),
-                  if (rightArrow)
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Colors.grey[500],
-                    ),
-                ],
-              )
-              : Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (icon != null || title.isNotEmpty)
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        if (icon != null)
-                          Container(
-                            width: small ? 32 : 38,
-                            height: small ? 32 : 38,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: color.withOpacity(0.10),
-                            ),
-                            child: Center(
-                              child: Icon(icon, color: color, size: iconSize),
-                            ),
-                          ),
-                        if (icon != null) SizedBox(width: 8),
-                        if (title.isNotEmpty)
-                          Expanded(
-                            child: Text(
-                              title,
-                              style: TextStyle(
-                                fontSize: titleSize,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 0.1,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                      ],
-                    ),
-                  if (icon != null || title.isNotEmpty) SizedBox(height: 8),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: valueSize,
-                      fontWeight: FontWeight.bold,
-                      color: valueColor ?? color,
-                      letterSpacing: 0.2,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (subtitle != null && subtitle!.isNotEmpty) ...[
-                    SizedBox(height: 2),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            subtitle!,
-                            style: TextStyle(
-                              fontSize: subtitleSize,
-                              color: Colors.grey[600],
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (subtitle != null && subtitle!.isNotEmpty) ...[
+                  SizedBox(height: 2),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        subtitle!,
+                        style: TextStyle(
+                          fontSize: subtitleSize,
+                          fontWeight: (subtitle == 'To Collect' || subtitle == 'To Pay')
+                              ? FontWeight.w600
+                              : FontWeight.normal,
+                                                   color: subtitle == 'To Collect'
+                             ? Colors.green[700]
+                             : subtitle == 'To Pay'
+                                 ? Colors.red[700]
+                                 : primaryColor.withOpacity(0.8),
                         ),
-                        if (rightArrow)
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 16,
-                            color: Colors.grey[500],
-                          ),
-                      ],
-                    ),
-                  ] else if (rightArrow)
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        size: 16,
-                        color: Colors.grey[500],
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
+                      if (showArrow) ...[
+                        SizedBox(width: 4),
+                        Icon(
+                          arrowDirection == 'down' ? Icons.arrow_downward : Icons.arrow_upward,
+                          size: 12,
+                          color: subtitle == 'To Collect'
+                              ? Colors.green[700]
+                              : Colors.red[700],
+                        ),
+                      ],
+                    ],
+                  ),
                 ],
-                     ),
-     );
-   }
-
-   void _showBusinessBottomSheet(BuildContext context) {
-     showModalBottomSheet(
-       context: context,
-       isScrollControlled: true,
-       backgroundColor: Colors.transparent,
-       builder: (context) => _BusinessBottomSheet(),
-     );
-   }
+              ],
+            ),
+          ),
+          if (rightArrow)
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Colors.grey[500],
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 class _BusinessBottomSheet extends StatelessWidget {
@@ -1006,77 +740,180 @@ class _ContactOption extends StatelessWidget {
   }
 }
 
-class _TransactionItem extends StatelessWidget {
-  final String title;
+// New widget for invoice transaction items
+class _InvoiceTransactionItem extends StatelessWidget {
+  final String customerName;
+  final String invoiceNumber;
+  final String dueDate;
   final String amount;
-  final String time;
-  final bool isCredit;
+  final String status;
   final bool isTablet;
 
-  const _TransactionItem({
-    required this.title,
+  const _InvoiceTransactionItem({
+    required this.customerName,
+    required this.invoiceNumber,
+    required this.dueDate,
     required this.amount,
-    required this.time,
-    required this.isCredit,
+    required this.status,
     required this.isTablet,
   });
 
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'paid':
+        return Colors.green[700]!;
+      case 'unpaid':
+        return Colors.red[700]!;
+      case 'overdue':
+        return Colors.orange[700]!;
+      default:
+        return Colors.grey[700]!;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: isTablet ? 16 : 12,
-        vertical: isTablet ? 14 : 10,
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.withOpacity(0.2)),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: isTablet ? 38 : 32,
-            height: isTablet ? 38 : 32,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isCredit ? Colors.green[50] : Colors.red[50],
-            ),
-            child: Center(
-              child: Icon(
-                isCredit ? Icons.arrow_downward : Icons.arrow_upward,
-                color: isCredit ? Colors.green[700] : Colors.red[700],
-                size: isTablet ? 18 : 14,
-              ),
-            ),
-          ),
-          SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                    color: Colors.black87,
-                  ),
-                ),
-                SizedBox(height: 2),
-                Text(
-                  time,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Text(
-            amount,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-              color: isCredit ? Colors.green[700] : Colors.red[700],
-            ),
-          ),
+                                // Customer name
+           Text(
+             customerName,
+             style: TextStyle(
+               fontWeight: FontWeight.w600,
+               fontSize: 14,
+               color: Colors.black87,
+             ),
+           ),
+           SizedBox(height: 4),
+           // Invoice details and amount/status row
+           Row(
+             children: [
+               Expanded(
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     Text(
+                       invoiceNumber,
+                       style: TextStyle(
+                         fontSize: 12,
+                         color: Colors.grey[600],
+                       ),
+                     ),
+                     SizedBox(height: 2),
+                     Text(
+                       dueDate,
+                       style: TextStyle(
+                         fontSize: 12,
+                         color: Colors.grey[600],
+                       ),
+                     ),
+                   ],
+                 ),
+               ),
+               Column(
+                 crossAxisAlignment: CrossAxisAlignment.end,
+                 children: [
+                   Text(
+                     amount,
+                     style: TextStyle(
+                       fontWeight: FontWeight.w600,
+                       fontSize: 14,
+                       color: Colors.black87,
+                     ),
+                   ),
+                   SizedBox(height: 4),
+                   Container(
+                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                     decoration: BoxDecoration(
+                       color: _getStatusColor(status).withOpacity(0.1),
+                       borderRadius: BorderRadius.circular(4),
+                     ),
+                     child: Text(
+                       status,
+                       style: TextStyle(
+                         fontSize: 10,
+                         fontWeight: FontWeight.w500,
+                         color: _getStatusColor(status),
+                       ),
+                     ),
+                   ),
+                 ],
+               ),
+             ],
+           ),
+          SizedBox(height: 12),
+                     // Action buttons
+           Row(
+             children: [
+               Expanded(
+                 child: GestureDetector(
+                   onTap: () {
+                     // Handle Record Manually action
+                   },
+                   child: Container(
+                     height: 32,
+                     decoration: BoxDecoration(
+                       color: Colors.grey[100],
+                       borderRadius: BorderRadius.circular(6),
+                     ),
+                     child: Row(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       children: [
+                         Icon(Icons.currency_rupee, size: 14, color: Colors.grey[700]),
+                         SizedBox(width: 4),
+                         Text(
+                           'Record Manually',
+                           style: TextStyle(
+                             fontSize: 11,
+                             color: Colors.grey[700],
+                             fontWeight: FontWeight.w500,
+                           ),
+                         ),
+                       ],
+                     ),
+                   ),
+                 ),
+               ),
+               SizedBox(width: 8),
+               Expanded(
+                 child: GestureDetector(
+                   onTap: () {
+                     // Handle Share Payment Link action
+                   },
+                   child: Container(
+                     height: 32,
+                     decoration: BoxDecoration(
+                       color: Colors.green[50],
+                       borderRadius: BorderRadius.circular(6),
+                     ),
+                     child: Row(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       children: [
+                         Icon(Icons.message, size: 14, color: Colors.green[600]),
+                         SizedBox(width: 4),
+                         Text(
+                           'Share Payment Link',
+                           style: TextStyle(
+                             fontSize: 11,
+                             color: Colors.green[600],
+                             fontWeight: FontWeight.w500,
+                           ),
+                         ),
+                       ],
+                     ),
+                   ),
+                 ),
+               ),
+             ],
+           ),
         ],
       ),
     );

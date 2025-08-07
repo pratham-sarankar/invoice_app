@@ -299,6 +299,14 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
               const Divider(height: 1, color: Color(0xFFE9ECEF)),
               _buildSettingsListTile(
+                'Manage Companies',
+                Icons.business_center,
+                () {
+                  Navigator.pushNamed(context, '/manage-companies');
+                },
+              ),
+              const Divider(height: 1, color: Color(0xFFE9ECEF)),
+              _buildSettingsListTile(
                 'Account Settings',
                 Icons.person_outline,
                 () {
