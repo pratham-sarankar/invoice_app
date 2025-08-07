@@ -311,54 +311,60 @@ class _PurchaseScreenState extends State<PurchaseScreen>
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Add New Purchase',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + 
+                   MediaQuery.of(context).padding.bottom,
+          ),
+          child: Container(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Add New Purchase',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
                 ),
-              ),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildActionButton(
-                    context,
-                    'Create Invoice',
-                    Icons.receipt_long_outlined,
-                    primaryColor,
-                    () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => CreatePurchaseScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  _buildActionButton(
-                    context,
-                    'Upload Bill',
-                    Icons.upload_file,
-                    secondaryColor,
-                    () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => UploadBillScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildActionButton(
+                      context,
+                      'Create Invoice',
+                      Icons.receipt_long_outlined,
+                      primaryColor,
+                      () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CreatePurchaseScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildActionButton(
+                      context,
+                      'Upload Bill',
+                      Icons.upload_file,
+                      secondaryColor,
+                      () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => UploadBillScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
