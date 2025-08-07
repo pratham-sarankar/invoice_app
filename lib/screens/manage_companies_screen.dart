@@ -19,6 +19,7 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
       'name': 'Act t Connect',
       'id': '1234567890',
       'status': 'active',
+      'syncStatus': true, // true for sync on, false for sync off
     },
   ];
 
@@ -29,7 +30,7 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 1, vsync: this);
     _tabController.addListener(() {
       setState(() {
         _selectedTabIndex = _tabController.index;
@@ -64,12 +65,26 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
                 controller: _tabController,
                 children: [
                   _buildMyCompaniesTab(theme),
-                  _buildSharedWithMeTab(theme),
                 ],
               ),
             ),
-            _buildBottomActionButtons(theme),
           ],
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            _addCompany();
+          },
+          backgroundColor: theme.colorScheme.primary,
+          foregroundColor: theme.colorScheme.surface,
+          elevation: 4,
+          icon: const Icon(Icons.add, size: 20),
+          label: Text(
+            'Add Company',
+            style: theme.textTheme.labelLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.surface,
+            ),
+          ),
         ),
       ),
     );
@@ -187,7 +202,6 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
         dividerColor: Colors.transparent,
                  tabs: const [
            Tab(text: 'My Companies'),
-           Tab(text: 'Shared With Me'),
          ],
       ),
     );
@@ -287,13 +301,56 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      company['id'],
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontSize: 14,
-                        color: theme.colorScheme.onSurface.withOpacity(0.6),
-                        fontWeight: FontWeight.w500,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          company['id'],
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontSize: 14,
+                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                                                 Container(
+                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                           decoration: BoxDecoration(
+                             color: (company['syncStatus'] ?? false) 
+                                 ? theme.colorScheme.primary.withOpacity(0.1)
+                                 : theme.colorScheme.onSurface.withOpacity(0.1),
+                             borderRadius: BorderRadius.circular(12),
+                             border: Border.all(
+                               color: (company['syncStatus'] ?? false)
+                                   ? theme.colorScheme.primary.withOpacity(0.3)
+                                   : theme.colorScheme.onSurface.withOpacity(0.3),
+                               width: 1,
+                             ),
+                           ),
+                           child: Row(
+                             mainAxisSize: MainAxisSize.min,
+                             children: [
+                               Icon(
+                                 Icons.sync,
+                                 size: 12,
+                                 color: (company['syncStatus'] ?? false)
+                                     ? theme.colorScheme.primary
+                                     : theme.colorScheme.onSurface.withOpacity(0.5),
+                               ),
+                               const SizedBox(width: 4),
+                               Text(
+                                 (company['syncStatus'] ?? false) ? 'Sync On' : 'Sync Off',
+                                 style: theme.textTheme.labelSmall?.copyWith(
+                                   fontSize: 10,
+                                   fontWeight: FontWeight.w600,
+                                   color: (company['syncStatus'] ?? false)
+                                       ? theme.colorScheme.primary
+                                       : theme.colorScheme.onSurface.withOpacity(0.5),
+                                 ),
+                               ),
+                             ],
+                           ),
+                         ),
+                      ],
                     ),
                   ],
                 ),
@@ -309,94 +366,12 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
               ),
             ],
           ),
-          
         ],
       ),
     );
   }
 
-  Widget _buildBottomActionButtons(ThemeData theme) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      color: theme.colorScheme.surface,
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildActionButton(
-              text: 'Restore backup',
-              icon: Icons.restore,
-              isPrimary: false,
-              onTap: () {
-                _restoreBackup();
-              },
-              theme: theme,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _buildActionButton(
-              text: 'Add Company',
-              icon: Icons.add,
-              isPrimary: true,
-              onTap: () {
-                _addCompany();
-              },
-              theme: theme,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildActionButton({
-    required String text,
-    required IconData icon,
-    required bool isPrimary,
-    required VoidCallback onTap,
-    required ThemeData theme,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: isPrimary ? theme.colorScheme.primary : theme.colorScheme.surface,
-          border: Border.all(
-            color: theme.colorScheme.primary,
-            width: 1,
-          ),
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Column(
-          children: [
-            Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: isPrimary ? theme.colorScheme.surface : theme.colorScheme.primary,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                icon,
-                color: isPrimary ? theme.colorScheme.primary : theme.colorScheme.surface,
-                size: 18,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              text,
-              style: theme.textTheme.labelSmall?.copyWith(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: isPrimary ? theme.colorScheme.surface : theme.colorScheme.primary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   void _showMoreOptions(ThemeData theme) {
     showModalBottomSheet(
@@ -460,15 +435,7 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
     );
   }
 
-  void _restoreBackup() {
-    // Implement restore backup functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Restore backup functionality will be implemented'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
-    );
-  }
+
 
   void _addCompany() {
     // Navigate to add company screen
