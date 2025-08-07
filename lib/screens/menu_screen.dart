@@ -36,8 +36,6 @@ class _MenuScreenState extends State<MenuScreen> {
                   _buildSubscriptionSection(),
                   const SizedBox(height: 12),
                   _buildInviteEarnSection(),
-                  const SizedBox(height: 12),
-                  _buildForYouSection(),
                   const SizedBox(height: 16),
                   _buildSettingsSection(),
                   const SizedBox(height: 80), // Space for bottom navigation
@@ -267,43 +265,7 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  Widget _buildForYouSection() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: const Color(0xFFE9ECEF),
-          width: 1,
-        ),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.lightbulb_outline,
-            color: primaryColor,
-            size: 20,
-          ),
-          const SizedBox(width: 10),
-          const Expanded(
-            child: Text(
-              'For You',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1A1A1A),
-              ),
-            ),
-          ),
-          Icon(
-            Icons.arrow_forward_ios,
-            color: primaryColor,
-            size: 14,
-          ),
-        ],
-      ),
-    );
-  }
+
 
   Widget _buildSettingsSection() {
     return Column(
@@ -325,6 +287,14 @@ class _MenuScreenState extends State<MenuScreen> {
                 'NEW',
                 () {
                   Navigator.pushNamed(context, '/invoice-settings');
+                },
+              ),
+              const Divider(height: 1, color: Color(0xFFE9ECEF)),
+              _buildSettingsListTile(
+                'Business Profile',
+                Icons.business,
+                () {
+                  Navigator.pushNamed(context, '/business-profile');
                 },
               ),
               const Divider(height: 1, color: Color(0xFFE9ECEF)),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:invoice_app/screens/about_screen.dart';
+import 'package:invoice_app/screens/business_profile_screen.dart';
 import 'package:invoice_app/screens/create_invoice.dart';
 import 'package:invoice_app/screens/dashboard.dart';
 import 'package:invoice_app/screens/invite_earn_screen.dart';
@@ -45,6 +47,8 @@ class _RestaurantInvoiceAppState extends State<RestaurantInvoiceApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         primaryColor: primaryColor,
+        fontFamily: GoogleFonts.openSans().fontFamily,
+        textTheme: GoogleFonts.openSansTextTheme(Theme.of(context).textTheme),
         primarySwatch: MaterialColor(primaryColor.value, {
           50: primaryColor.withOpacity(0.1),
           100: primaryColor.withOpacity(0.2),
@@ -69,7 +73,7 @@ class _RestaurantInvoiceAppState extends State<RestaurantInvoiceApp> {
           foregroundColor: primaryColor,
           elevation: 0,
           centerTitle: true,
-          titleTextStyle: TextStyle(
+          titleTextStyle: GoogleFonts.openSans(
             color: primaryColor,
             fontSize: 16,
             fontWeight: FontWeight.w700,
@@ -83,6 +87,10 @@ class _RestaurantInvoiceAppState extends State<RestaurantInvoiceApp> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
+            textStyle: GoogleFonts.openSans(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
@@ -91,6 +99,10 @@ class _RestaurantInvoiceAppState extends State<RestaurantInvoiceApp> {
             side: BorderSide(color: primaryColor),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
+            ),
+            textStyle: GoogleFonts.openSans(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
@@ -103,11 +115,15 @@ class _RestaurantInvoiceAppState extends State<RestaurantInvoiceApp> {
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(color: Colors.grey[300]!),
           ),
+          labelStyle: GoogleFonts.openSans(),
+          hintStyle: GoogleFonts.openSans(),
         ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         primaryColor: primaryColor,
+        fontFamily: GoogleFonts.openSans().fontFamily,
+        textTheme: GoogleFonts.openSansTextTheme(Theme.of(context).textTheme),
         primarySwatch: MaterialColor(primaryColor.value, {
           50: primaryColor.withOpacity(0.1),
           100: primaryColor.withOpacity(0.2),
@@ -127,6 +143,56 @@ class _RestaurantInvoiceAppState extends State<RestaurantInvoiceApp> {
           background: Colors.black,
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.grey[900],
+          foregroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: true,
+          titleTextStyle: GoogleFonts.openSans(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: primaryColor,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            textStyle: GoogleFonts.openSans(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: primaryColor,
+            side: BorderSide(color: primaryColor),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            textStyle: GoogleFonts.openSans(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: primaryColor, width: 1.5),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey[600]!),
+          ),
+          labelStyle: GoogleFonts.openSans(),
+          hintStyle: GoogleFonts.openSans(),
+        ),
       ),
       themeMode: _themeMode,
       initialRoute: '/',
@@ -145,6 +211,7 @@ class _RestaurantInvoiceAppState extends State<RestaurantInvoiceApp> {
         '/account-settings': (context) => const AccountSettingsScreen(),
         '/reminder-settings': (context) => const ReminderSettingsScreen(),
         '/about': (context) => const AboutScreen(),
+        '/business-profile': (context) => const BusinessProfileScreen(),
         '/otp-verification': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as String?;
           return OTPVerificationScreen(phoneNumber: args ?? '');

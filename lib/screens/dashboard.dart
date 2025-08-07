@@ -23,6 +23,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
         child: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           elevation: 0,
           centerTitle: false,
