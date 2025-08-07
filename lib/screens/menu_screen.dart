@@ -355,27 +355,35 @@ class _MenuScreenState extends State<MenuScreen> {
     IconData icon,
     VoidCallback onTap,
   ) {
-    return ListTile(
+    return InkWell(
       onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      minVerticalPadding: 0,
-      leading: Icon(
-        icon,
-        color: primaryColor,
-        size: 18,
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-          color: Color(0xFF1A1A1A),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: primaryColor,
+              size: 18,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF1A1A1A),
+                ),
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: primaryColor,
+              size: 12,
+            ),
+          ],
         ),
-      ),
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        color: primaryColor,
-        size: 12,
       ),
     );
   }
@@ -386,47 +394,55 @@ class _MenuScreenState extends State<MenuScreen> {
     String badge,
     VoidCallback onTap,
   ) {
-    return ListTile(
+    return InkWell(
       onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      minVerticalPadding: 0,
-      leading: Icon(
-        icon,
-        color: primaryColor,
-        size: 18,
-      ),
-      title: Row(
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFF1A1A1A),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: primaryColor,
+              size: 18,
             ),
-          ),
-          const SizedBox(width: 4),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-            decoration: BoxDecoration(
-              color: Colors.red,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              badge,
-              style: const TextStyle(
-                fontSize: 7,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Row(
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1A1A1A),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      badge,
+                      style: const TextStyle(
+                        fontSize: 7,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
-      ),
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        color: primaryColor,
-        size: 12,
+            Icon(
+              Icons.arrow_forward_ios,
+              color: primaryColor,
+              size: 12,
+            ),
+          ],
+        ),
       ),
     );
   }

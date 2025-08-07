@@ -9,7 +9,7 @@ class CreatePurchaseScreen extends StatefulWidget {
 }
 
 class _CreatePurchaseScreenState extends State<CreatePurchaseScreen> {
-  final TextEditingController _purchaseDateController = TextEditingController(text: '7-8-2025');
+  final TextEditingController _purchaseDateController = TextEditingController(text: '07-08-2025');
   final TextEditingController _prefixController = TextEditingController();
   final TextEditingController _purchaseNumberController = TextEditingController(text: '1');
   
@@ -372,11 +372,21 @@ class _CreatePurchaseScreenState extends State<CreatePurchaseScreen> {
             // Terms and Conditions Section
             _buildSectionHeader('Terms and Conditions'),
             const SizedBox(height: 6),
-            Text(
-              'This is an electronically generated document',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurface.withOpacity(0.6),
-                decoration: TextDecoration.underline,
+            SizedBox(
+              height: 36,
+              child: TextField(
+                controller: TextEditingController(text: 'This is an electronically generated document'),
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.2)),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                ),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  fontSize: 12,
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -590,36 +600,37 @@ class _CreatePurchaseScreenState extends State<CreatePurchaseScreen> {
           ),
         ),
         const SizedBox(height: 4),
-        Container(
+        SizedBox(
           height: 36,
-          decoration: BoxDecoration(
-            color: colorScheme.surface,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: colorScheme.outline.withOpacity(0.2)),
-          ),
-          child: Center(
-            child: TextField(
-              controller: controller,
-              keyboardType: keyboardType,
-              readOnly: readOnly,
-              onTap: onTap,
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 8,
-                ),
-                hintStyle: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurface.withOpacity(0.4),
-                  fontSize: 12,
-                ),
-              ),
-              style: theme.textTheme.bodySmall?.copyWith(
-                fontSize: 12,
-              ),
-            ),
-          ),
+          child: TextField(
+             controller: controller,
+             keyboardType: keyboardType,
+             readOnly: readOnly,
+             onTap: onTap,
+             textAlign: TextAlign.center,
+             decoration: InputDecoration(
+               border: OutlineInputBorder(
+                 borderRadius: BorderRadius.circular(8),
+                 borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.2), width: 0.5),
+               ),
+               enabledBorder: OutlineInputBorder(
+                 borderRadius: BorderRadius.circular(8),
+                 borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.2), width: 0.5),
+               ),
+               focusedBorder: OutlineInputBorder(
+                 borderRadius: BorderRadius.circular(8),
+                 borderSide: BorderSide(color: colorScheme.primary, width: 0.5),
+               ),
+               contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+               hintStyle: theme.textTheme.bodySmall?.copyWith(
+                 color: colorScheme.onSurface.withOpacity(0.4),
+                 fontSize: 12,
+               ),
+             ),
+             style: theme.textTheme.bodySmall?.copyWith(
+               fontSize: 12,
+             ),
+           ),
         ),
       ],
     );
@@ -634,7 +645,7 @@ class _CreatePurchaseScreenState extends State<CreatePurchaseScreen> {
     );
     if (picked != null) {
       setState(() {
-        _purchaseDateController.text = '${picked.day}-${picked.month}-${picked.year}';
+        _purchaseDateController.text = '${picked.day.toString().padLeft(2, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.year}';
       });
     }
   }

@@ -224,16 +224,18 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                      fontSize: 14,
                                      color: Colors.grey[500],
                                    ),
-                                   prefixIcon: Icon(
-                                     Icons.phone_outlined,
-                                     color: primaryColor,
-                                   ),
-                                   prefixText: '+91 ',
-                                   prefixStyle: TextStyle(
-                                     fontSize: 16,
-                                     fontWeight: FontWeight.w600,
-                                     color: Colors.black87,
-                                   ),
+                                                                       prefixIcon: Icon(
+                                      Icons.phone_outlined,
+                                      color: primaryColor,
+                                      size: 20,
+                                    ),
+                                    prefixText: '+91 ',
+                                    prefixStyle: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black87,
+                                      height: 1.0,
+                                    ),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide(color: Colors.grey[300]!),
@@ -252,10 +254,10 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                   ),
                                   filled: true,
                                   fillColor: Colors.grey[50],
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 14,
-                                    vertical: 14,
-                                  ),
+                                                                     contentPadding: EdgeInsets.symmetric(
+                                     horizontal: 14,
+                                     vertical: 16,
+                                   ),
                                 ),
                               ),
                               SizedBox(height: 20),

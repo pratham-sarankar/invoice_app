@@ -119,94 +119,58 @@ class _HomeDashboardState extends State<HomeDashboard> {
                      arrowDirection: 'up',
                      primaryColor: primaryColor,
                    ),
-                   // Purchase Card
+                   // Purchase Card (Orange Theme)
                    GestureDetector(
                      onTap: () => Navigator.pushNamed(context, '/purchase'),
                      child: _CompactDashboardCard(
                        icon: null,
                        title: '',
                        value: 'Purchase',
-                       color: primaryColor.withOpacity(0.1),
+                       color: Color(0xFFFFF3E0), // Light orange background
                        subtitle: 'Value of Items',
                        small: true,
                        rightArrow: true,
-                       valueColor: primaryColor,
-                       primaryColor: primaryColor,
+                       valueColor: Color(0xFFE65100), // Dark orange text
+                       primaryColor: Color(0xFFE65100),
                      ),
                    ),
-                   // This week's sale Card
+                   // This week's sale Card (Blue Theme)
                    _CompactDashboardCard(
                      icon: null,
                      title: '',
                      value: '₹ 440',
-                     color: primaryColor.withOpacity(0.1),
+                     color: Color(0xFFE3F2FD), // Light blue background
                      subtitle: "This week's sale",
                      small: true,
                      rightArrow: true,
-                     valueColor: primaryColor,
-                     primaryColor: primaryColor,
+                     valueColor: Color(0xFF1565C0), // Dark blue text
+                     primaryColor: Color(0xFF1565C0),
                    ),
-                   // Total Balance Card
+                   // Total Balance Card (Purple Theme)
                    _CompactDashboardCard(
                      icon: null,
                      title: '',
                      value: 'Total Balance',
-                     color: primaryColor.withOpacity(0.1),
+                     color: Color(0xFFF3E5F5), // Light purple background
                      subtitle: 'Cash + Bank Balance',
                      small: true,
                      rightArrow: true,
-                     valueColor: primaryColor,
-                     primaryColor: primaryColor,
+                     valueColor: Color(0xFF7B1FA2), // Dark purple text
+                     primaryColor: Color(0xFF7B1FA2),
                    ),
-                   // Reports Card
+                   // Reports Card (Teal Theme)
                    _CompactDashboardCard(
                      icon: null,
                      title: '',
                      value: 'Reports',
-                     color: primaryColor.withOpacity(0.1),
+                     color: Color(0xFFE0F2F1), // Light teal background
                      subtitle: 'Sales, Party, GST...',
                      small: true,
                      rightArrow: true,
-                     valueColor: primaryColor,
-                     primaryColor: primaryColor,
+                     valueColor: Color(0xFF00695C), // Dark teal text
+                     primaryColor: Color(0xFF00695C),
                    ),
                 ],
-              ),
-              SizedBox(height: 18),
-              
-              // Reports Section with Crown
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.withOpacity(0.2)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.workspace_premium,
-                      color: Colors.amber[600],
-                      size: 20,
-                    ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'View unlimited reports',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Colors.grey[500],
-                    ),
-                  ],
-                ),
               ),
               SizedBox(height: 18),
               
@@ -487,7 +451,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                              ? Colors.green[700]
                              : subtitle == 'To Pay'
                                  ? Colors.red[700]
-                                 : primaryColor.withOpacity(0.8),
+                                 : valueColor?.withOpacity(0.8) ?? primaryColor.withOpacity(0.8),
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
