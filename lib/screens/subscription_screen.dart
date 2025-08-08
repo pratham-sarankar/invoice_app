@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
 
 class SubscriptionScreen extends StatefulWidget {
@@ -147,12 +148,29 @@ class _SubscriptionScreenState extends State<SubscriptionScreen>
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       elevation: 0,
       toolbarHeight: 48,
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: Theme.of(context).appBarTheme.iconTheme?.color ?? const Color(0xFF1F2937), size: 24),
-        onPressed: () => Navigator.pop(context),
-        padding: EdgeInsets.zero,
-        constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-      ),
+       leading: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.grey[50],
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: Colors.grey[200]!,
+              width: 1,
+            ),
+          ),
+          child: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              size: 16,
+              color: Color(0xFF1F2937), 
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+            style: IconButton.styleFrom(
+              padding: const EdgeInsets.all(8),
+              minimumSize: const Size(32, 32),
+            ),
+          ),
+        ),
       title: AnimatedBuilder(
         animation: _fadeAnimation,
         builder: (context, child) {
@@ -160,12 +178,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen>
             offset: Offset(0, 15 * (1 - _fadeAnimation.value)),
             child: Opacity(
               opacity: _fadeAnimation.value,
-              child: const Text(
+              child: Text(
                 'Business Subscription Plans',
                 style: TextStyle(
-                  color: Color(0xFF1F2937),
+                  color: const Color(0xFF1F2937),
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
+                  fontFamily: GoogleFonts.openSans().fontFamily,
                 ),
               ),
             ),
@@ -222,8 +241,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen>
              },
            ),
            const SizedBox(height: 12),
-                     SizedBox(
-             height: 80,
+           SizedBox(
+             height: 100, // Increased from 80 to 100 for better spacing
              child: ListView.builder(
                clipBehavior: Clip.none,
                scrollDirection: Axis.horizontal,
@@ -247,7 +266,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen>
                        child: Opacity(
                          opacity: animation.value,
                          child: Container(
-                           width: 100,
+                           width: 110, // Increased from 100 to 110 for better content display
                            margin: EdgeInsets.only(
                              left: index == 0 ? 0 : 6,
                              right: index == plans.length - 1 ? 0 : 6,
@@ -305,42 +324,49 @@ class _SubscriptionScreenState extends State<SubscriptionScreen>
               ? null
               : Border.all(color: Colors.grey[200]!, width: 1),
         ),
-                 child: Container(
-           padding: const EdgeInsets.all(10),
-           child: Column(
-             mainAxisAlignment: MainAxisAlignment.center,
-             crossAxisAlignment: CrossAxisAlignment.center,
-             children: [
-               Text(
-                 plan.name,
-                 style: TextStyle(
-                   fontSize: 12,
-                   fontWeight: FontWeight.w700,
-                   color: isSelected ? Colors.white : const Color(0xFF1F2937),
-                 ),
-                 textAlign: TextAlign.center,
-               ),
-               const SizedBox(height: 4),
-               Text(
-                 '₹${plan.monthlyPrice}',
-                 style: TextStyle(
-                   fontSize: 15,
-                   fontWeight: FontWeight.w800,
-                   color: isSelected ? Colors.white : const Color(0xFF1F2937),
-                 ),
-                 textAlign: TextAlign.center,
-               ),
-               Text(
-                 '/month',
-                 style: TextStyle(
-                   fontSize: 9,
-                   color: isSelected ? Colors.white70 : Colors.grey[600],
-                 ),
-                 textAlign: TextAlign.center,
-               ),
-             ],
-           ),
-         ),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Plan name
+              Text(
+                plan.name,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: isSelected ? Colors.white : const Color(0xFF1F2937),
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 6),
+              // Price
+              Text(
+                '₹${plan.monthlyPrice}',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: isSelected ? Colors.white : const Color(0xFF1F2937),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 2),
+              // Per month text
+              Text(
+                '/month',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: isSelected ? Colors.white70 : Colors.grey[600],
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

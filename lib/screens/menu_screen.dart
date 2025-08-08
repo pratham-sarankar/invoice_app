@@ -189,8 +189,9 @@ class _MenuScreenState extends State<MenuScreen> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
+          color: const Color(0xFFFFF8E1), // Light yellow background
           border: Border.all(
-            color: const Color(0xFFE9ECEF),
+            color: const Color(0xFFFFE082), // Light yellow border
             width: 1,
           ),
           borderRadius: BorderRadius.circular(6),

@@ -11,6 +11,8 @@ class ReminderSettingsScreen extends StatefulWidget {
 class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
   // Theme colors
   static const Color primaryColor = Color(0xFF2E3085);
+  static const Color secondaryColor = Color(0xFF4E4AA8);
+  static const Color borderColor = Color(0xFFE9ECEF);
   static const Color whatsappGreen = Color(0xFF25D366);
 
   // Toggle states
@@ -39,50 +41,57 @@ class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
           leading: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8F9FA),
+              color: Colors.grey[50],
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: const Color(0xFFE9ECEF),
+                color: Colors.grey[200]!,
                 width: 1,
               ),
             ),
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back,
-                color: Color(0xFF2E3085),
+                color: primaryColor,
                 size: 18,
               ),
               onPressed: () => Navigator.of(context).pop(),
               style: IconButton.styleFrom(
                 padding: const EdgeInsets.all(8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                minimumSize: const Size(32, 32),
               ),
             ),
           ),
-          title: const Text(
+          title: Text(
             'Reminder Settings',
             style: TextStyle(
-              color: Color(0xFF1A1A1A),
-              fontSize: 18,
+              color: Colors.black87,
+              fontSize: 17,
               fontWeight: FontWeight.w600,
             ),
           ),
           centerTitle: true,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1),
+            child: Container(
+              height: 1,
+              color: borderColor,
+            ),
+          ),
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildPartyRemindersSection(),
-                const SizedBox(height: 16),
-                _buildYourRemindersSection(),
-                const SizedBox(height: 16),
-                _buildWhatsappReminderSection(),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                children: [
+                  _buildPartyRemindersSection(),
+                  const SizedBox(height: 12),
+                  _buildYourRemindersSection(),
+                  const SizedBox(height: 12),
+                  _buildWhatsappReminderSection(),
+                  const SizedBox(height: 80), // Space for bottom navigation
+                ],
+              ),
             ),
           ),
         ),
@@ -186,8 +195,8 @@ class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
         Text(
           title,
           style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
             color: Color(0xFF1A1A1A),
           ),
         ),
@@ -195,10 +204,10 @@ class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
         Container(
           decoration: BoxDecoration(
             border: Border.all(
-              color: const Color(0xFFE9ECEF),
+              color: borderColor,
               width: 1,
             ),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(6),
           ),
           child: Column(
             children: children.asMap().entries.map((entry) {
@@ -208,7 +217,7 @@ class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
                 children: [
                   child,
                   if (index < children.length - 1)
-                    const Divider(height: 1, color: Color(0xFFE9ECEF)),
+                    const Divider(height: 1, color: borderColor),
                 ],
               );
             }).toList(),
@@ -226,56 +235,65 @@ class _ReminderSettingsScreenState extends State<ReminderSettingsScreen> {
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      leading: Container(
-        width: 28,
-        height: 28,
-        decoration: BoxDecoration(
-          color: iconColor.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Icon(
-          icon,
-          color: iconColor,
-          size: 16,
-        ),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-          color: Color(0xFF1A1A1A),
-        ),
-      ),
-      subtitle: subtitle != null
-          ? Text(
-              subtitle,
-              style: const TextStyle(
-                fontSize: 11,
-                color: Color(0xFF6C757D),
+    return InkWell(
+      onTap: () => onChanged(!value),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: iconColor,
+              size: 18,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1A1A1A),
+                    ),
+                  ),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ],
               ),
-            )
-          : null,
-      trailing: Transform.scale(
-        scale: 0.8,
-        child: Switch(
-          value: value,
-          onChanged: onChanged,
-          activeColor: primaryColor,
-          activeTrackColor: primaryColor.withOpacity(0.2),
-          inactiveThumbColor: Colors.white,
-          inactiveTrackColor: const Color(0xFFE0E0E0),
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          overlayColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-              if (states.contains(MaterialState.pressed)) {
-                return primaryColor.withOpacity(0.1);
-              }
-              return null;
-            },
-          ),
+            ),
+            Transform.scale(
+              scale: 0.8,
+              child: Switch(
+                value: value,
+                onChanged: onChanged,
+                activeColor: primaryColor,
+                activeTrackColor: primaryColor.withOpacity(0.2),
+                inactiveThumbColor: Colors.white,
+                inactiveTrackColor: const Color(0xFFE0E0E0),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.pressed)) {
+                      return primaryColor.withOpacity(0.1);
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

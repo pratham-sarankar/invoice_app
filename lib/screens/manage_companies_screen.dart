@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ManageCompaniesScreen extends StatefulWidget {
   const ManageCompaniesScreen({super.key});
@@ -119,8 +120,9 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
         'Manage Companies',
         style: theme.textTheme.titleMedium?.copyWith(
           color: theme.colorScheme.onSurface,
-          fontSize: 18,
+          fontSize: 17,
           fontWeight: FontWeight.w600,
+          fontFamily: GoogleFonts.openSans().fontFamily,
         ),
       ),
       actions: [
@@ -377,28 +379,33 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
     showModalBottomSheet(
       context: context,
       backgroundColor: theme.colorScheme.surface,
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: Icon(Icons.settings, color: theme.colorScheme.onSurface),
-              title: Text('Settings', style: theme.textTheme.bodyMedium),
-              onTap: () {
-                Navigator.pop(context);
-                // Navigate to settings
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.help_outline, color: theme.colorScheme.onSurface),
-              title: Text('Help & Support', style: theme.textTheme.bodyMedium),
-              onTap: () {
-                Navigator.pop(context);
-                // Navigate to help
-              },
-            ),
-          ],
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom,
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.settings, color: theme.colorScheme.onSurface),
+                title: Text('Settings', style: theme.textTheme.bodyMedium),
+                onTap: () {
+                  Navigator.pop(context);
+                  // Navigate to settings
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.help_outline, color: theme.colorScheme.onSurface),
+                title: Text('Help & Support', style: theme.textTheme.bodyMedium),
+                onTap: () {
+                  Navigator.pop(context);
+                  // Navigate to help
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -408,28 +415,33 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
     showModalBottomSheet(
       context: context,
       backgroundColor: theme.colorScheme.surface,
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: Icon(Icons.edit, color: theme.colorScheme.onSurface),
-              title: Text('Rename Company', style: theme.textTheme.bodyMedium),
-              onTap: () {
-                Navigator.pop(context);
-                _renameCompany(company);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.delete, color: theme.colorScheme.error),
-              title: Text('Delete Company', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.error)),
-              onTap: () {
-                Navigator.pop(context);
-                _deleteCompany(company);
-              },
-            ),
-          ],
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom,
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.edit, color: theme.colorScheme.onSurface),
+                title: Text('Rename Company', style: theme.textTheme.bodyMedium),
+                onTap: () {
+                  Navigator.pop(context);
+                  _renameCompany(company);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.delete, color: theme.colorScheme.error),
+                title: Text('Delete Company', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.error)),
+                onTap: () {
+                  Navigator.pop(context);
+                  _deleteCompany(company);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -452,7 +464,8 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
       isScrollControlled: true,
       builder: (context) => Padding(
         padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 
+                 MediaQuery.of(context).padding.bottom,
         ),
         child: Container(
           padding: const EdgeInsets.all(20),
@@ -552,109 +565,114 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
     showModalBottomSheet(
       context: context,
       backgroundColor: theme.colorScheme.surface,
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Delete Company',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom,
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Delete Company',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(Icons.close),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.errorContainer.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: theme.colorScheme.error.withOpacity(0.2),
                   ),
                 ),
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: Icon(Icons.close),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.errorContainer.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: theme.colorScheme.error.withOpacity(0.2),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      color: theme.colorScheme.error,
+                      size: 24,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'Are you sure you want to delete "${company['name']}"? This action cannot be undone.',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: Row(
+              const SizedBox(height: 20),
+              Row(
                 children: [
-                  Icon(
-                    Icons.warning_amber_rounded,
-                    color: theme.colorScheme.error,
-                    size: 24,
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        'Cancel',
+                        style: theme.textTheme.labelLarge,
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Text(
-                      'Are you sure you want to delete "${company['name']}"? This action cannot be undone.',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        setState(() {
+                          myCompanies.remove(company);
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('${company['name']} deleted successfully'),
+                            backgroundColor: theme.colorScheme.primary,
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.error,
+                        foregroundColor: theme.colorScheme.surface,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        'Delete',
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.surface,
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Text(
-                      'Cancel',
-                      style: theme.textTheme.labelLarge,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      setState(() {
-                        myCompanies.remove(company);
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('${company['name']} deleted successfully'),
-                          backgroundColor: theme.colorScheme.primary,
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.colorScheme.error,
-                      foregroundColor: theme.colorScheme.surface,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Text(
-                      'Delete',
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.surface,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

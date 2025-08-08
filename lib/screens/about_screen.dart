@@ -11,6 +11,7 @@ class AboutScreen extends StatefulWidget {
 class _AboutScreenState extends State<AboutScreen> {
   // Theme colors
   static const Color primaryColor = Color(0xFF2E3085);
+  static const Color borderColor = Color(0xFFE9ECEF);
 
   @override
   Widget build(BuildContext context) {
@@ -27,48 +28,56 @@ class _AboutScreenState extends State<AboutScreen> {
           leading: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8F9FA),
+              color: Colors.grey[50],
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: const Color(0xFFE9ECEF),
+                color: Colors.grey[200]!,
                 width: 1,
               ),
             ),
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back,
-                color: Color(0xFF2E3085),
+                color: primaryColor,
                 size: 18,
               ),
               onPressed: () => Navigator.of(context).pop(),
               style: IconButton.styleFrom(
                 padding: const EdgeInsets.all(8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                minimumSize: const Size(32, 32),
               ),
             ),
           ),
           title: const Text(
             'About',
             style: TextStyle(
-              color: Color(0xFF1A1A1A),
-              fontSize: 18,
+              color: Colors.black87,
+              fontSize: 17,
               fontWeight: FontWeight.w600,
             ),
           ),
           centerTitle: true,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1),
+            child: Container(
+              height: 1,
+              color: borderColor,
+            ),
+          ),
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildPolicySection(),
-                const SizedBox(height: 24),
-                _buildVersionSection(),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildPolicySection(),
+                  const SizedBox(height: 12),
+                  _buildVersionSection(),
+                  const SizedBox(height: 80), // Space for bottom navigation
+                ],
+              ),
             ),
           ),
         ),
@@ -78,20 +87,19 @@ class _AboutScreenState extends State<AboutScreen> {
 
   Widget _buildPolicySection() {
     return Container(
-      width: double.infinity,
       decoration: BoxDecoration(
         border: Border.all(
-          color: const Color(0xFFE9ECEF),
+          color: borderColor,
           width: 1,
         ),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Column(
         children: [
           _buildPolicyTile('Terms of Service'),
-          const Divider(height: 1, color: Color(0xFFE9ECEF)),
+          const Divider(height: 1, color: borderColor),
           _buildPolicyTile('Privacy Policy'),
-          const Divider(height: 1, color: Color(0xFFE9ECEF)),
+          const Divider(height: 1, color: borderColor),
           _buildPolicyTile('Acceptable Use Policy'),
         ],
       ),
@@ -99,41 +107,54 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   Widget _buildPolicyTile(String title) {
-    return ListTile(
+    return InkWell(
       onTap: () {
         _showPolicyDialog(title);
       },
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: Color(0xFF1A1A1A),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        child: Row(
+          children: [
+            Icon(
+              Icons.description_outlined,
+              color: primaryColor,
+              size: 18,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF1A1A1A),
+                ),
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: primaryColor,
+              size: 12,
+            ),
+          ],
         ),
-      ),
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        color: primaryColor,
-        size: 14,
       ),
     );
   }
 
   Widget _buildVersionSection() {
     return Container(
-      width: double.infinity,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: borderColor,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(6),
+      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: double.infinity,
-            height: 1,
-            color: const Color(0xFFE9ECEF),
-          ),
-          const SizedBox(height: 16),
           _buildVersionItem('Version Number', 'v7.34.0(353)'),
-          const SizedBox(height: 12),
+          const Divider(height: 1, color: borderColor),
           _buildVersionItem('Invoice Version', 'v5.4.1'),
         ],
       ),
@@ -141,27 +162,42 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   Widget _buildVersionItem(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: Color(0xFF6C757D),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      child: Row(
+        children: [
+          Icon(
+            Icons.info_outline,
+            color: primaryColor,
+            size: 18,
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF1A1A1A),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF1A1A1A),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

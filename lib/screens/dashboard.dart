@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // Placeholder for other screens
 class HomeDashboard extends StatefulWidget {
@@ -39,6 +40,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                     fontSize: 16,
                     letterSpacing: 0.1,
                     color: primaryColor,
+                    fontFamily: GoogleFonts.openSansTextTheme(Theme.of(context).textTheme).bodyMedium?.fontFamily,
                   ),
                 ),
                 SizedBox(width: 4),

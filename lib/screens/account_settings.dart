@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});
@@ -12,6 +13,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   // Theme colors
   static const Color primaryColor = Color(0xFF2E3085);
   static const Color secondaryColor = Color(0xFF4E4AA8);
+  static const Color borderColor = Color(0xFFE9ECEF);
   
   // Controllers for text fields
   final TextEditingController _nameController = TextEditingController(text: 'User Name');
@@ -41,48 +43,59 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           leading: Container(
-            margin: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8F9FA),
+              color: Colors.grey[50],
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: const Color(0xFFE9ECEF),
+                color: Colors.grey[200]!,
                 width: 1,
               ),
             ),
             child: IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back,
-                color: Color(0xFF1A1A1A),
+                color: primaryColor,
                 size: 18,
               ),
-              padding: const EdgeInsets.all(8),
-              constraints: const BoxConstraints(
-                minWidth: 32,
-                minHeight: 32,
+              onPressed: () => Navigator.of(context).pop(),
+              style: IconButton.styleFrom(
+                padding: const EdgeInsets.all(8),
+                minimumSize: const Size(32, 32),
               ),
             ),
           ),
-          title: const Text(
+          title: Text(
             'Account Settings',
             style: TextStyle(
-              fontSize: 18,
+              color: Colors.black87,
+              fontSize: 17,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF1A1A1A),
+              fontFamily: GoogleFonts.openSans().fontFamily,
             ),
           ),
           centerTitle: true,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1),
+            child: Container(
+              height: 1,
+              color: borderColor,
+            ),
+          ),
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildUserInfoSection(),
-              const SizedBox(height: 24),
-              _buildSettingsSection(),
-            ],
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                children: [
+                  _buildUserInfoSection(),
+                  const SizedBox(height: 12),
+                  _buildSettingsSection(),
+                  const SizedBox(height: 80), // Space for bottom navigation
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -93,8 +106,17 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          'User Information',
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1A1A1A),
+          ),
+        ),
+        const SizedBox(height: 8),
         _buildInputField('Name', _nameController),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         _buildInputField('Mobile Number', _mobileController),
       ],
     );
@@ -106,27 +128,27 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Color(0xFF6C757D),
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w400,
+            color: Colors.grey[600],
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           decoration: BoxDecoration(
-            color: const Color(0xFFF8F9FA),
-            borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: const Color(0xFFE9ECEF),
+              color: borderColor,
               width: 1,
             ),
+            borderRadius: BorderRadius.circular(6),
           ),
           child: TextField(
             controller: controller,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
               color: Color(0xFF1A1A1A),
             ),
             decoration: const InputDecoration(
@@ -144,32 +166,54 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSettingsField(
-          icon: Icons.confirmation_number,
-          title: 'Referral Code',
-          onTap: () {
-            _showReferralCodeBottomSheet();
-          },
+        Text(
+          'Settings',
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1A1A1A),
+          ),
         ),
         const SizedBox(height: 8),
-        _buildSettingsField(
-          icon: Icons.language,
-          title: 'Language',
-          onTap: () {
-            _showLanguageBottomSheet();
-          },
-        ),
-        const SizedBox(height: 8),
-        _buildAppLockField(),
-        const SizedBox(height: 8),
-        _buildDataBackupField(),
-        const SizedBox(height: 8),
-        _buildSettingsField(
-          icon: Icons.logout,
-          title: 'Log Out',
-          onTap: () {
-            _showLogoutBottomSheet();
-          },
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: borderColor,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Column(
+            children: [
+              _buildSettingsField(
+                icon: Icons.confirmation_number,
+                title: 'Referral Code',
+                onTap: () {
+                  _showReferralCodeBottomSheet();
+                },
+              ),
+              const Divider(height: 1, color: borderColor),
+              _buildSettingsField(
+                icon: Icons.language,
+                title: 'Language',
+                onTap: () {
+                  _showLanguageBottomSheet();
+                },
+              ),
+              const Divider(height: 1, color: borderColor),
+              _buildAppLockField(),
+              const Divider(height: 1, color: borderColor),
+              _buildDataBackupField(),
+              const Divider(height: 1, color: borderColor),
+              _buildSettingsField(
+                icon: Icons.logout,
+                title: 'Log Out',
+                onTap: () {
+                  _showLogoutBottomSheet();
+                },
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -183,15 +227,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF8F9FA),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: const Color(0xFFE9ECEF),
-            width: 1,
-          ),
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         child: Row(
           children: [
             Icon(
@@ -204,8 +240,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               child: Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
                   color: Color(0xFF1A1A1A),
                 ),
               ),
@@ -213,7 +249,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             Icon(
               Icons.arrow_forward_ios,
               color: primaryColor,
-              size: 14,
+              size: 12,
             ),
           ],
         ),
@@ -222,73 +258,72 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   }
 
   Widget _buildAppLockField() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: const Color(0xFFE9ECEF),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.lock,
-            color: Color(0xFF2E3085),
-            size: 18,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  'App Lock',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF1A1A1A),
-                  ),
-                ),
-                SizedBox(height: 1),
-                Text(
-                  'Secure your account with phone password or fingerprint',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Color(0xFF6C757D),
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _appLockEnabled = !_appLockEnabled;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        child: Row(
+          children: [
+            Icon(
+              Icons.lock,
+              color: primaryColor,
+              size: 18,
             ),
-          ),
-          Transform.scale(
-            scale: 0.8,
-            child: Switch(
-              value: _appLockEnabled,
-              onChanged: (value) {
-                setState(() {
-                  _appLockEnabled = value;
-                });
-              },
-              activeColor: primaryColor,
-              activeTrackColor: primaryColor.withOpacity(0.2),
-              inactiveThumbColor: Colors.white,
-              inactiveTrackColor: const Color(0xFFE0E0E0),
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.pressed)) {
-                    return primaryColor.withOpacity(0.1);
-                  }
-                  return null;
-                },
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'App Lock',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1A1A1A),
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Secure your account with phone password or fingerprint',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+            Transform.scale(
+              scale: 0.8,
+              child: Switch(
+                value: _appLockEnabled,
+                onChanged: (value) {
+                  setState(() {
+                    _appLockEnabled = value;
+                  });
+                },
+                activeColor: primaryColor,
+                activeTrackColor: primaryColor.withOpacity(0.2),
+                inactiveThumbColor: Colors.white,
+                inactiveTrackColor: const Color(0xFFE0E0E0),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.pressed)) {
+                      return primaryColor.withOpacity(0.1);
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -299,22 +334,14 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         // Navigate to data backup settings
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF8F9FA),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: const Color(0xFFE9ECEF),
-            width: 1,
-          ),
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         child: Row(
           children: [
             Stack(
               children: [
-                const Icon(
+                Icon(
                   Icons.cloud,
-                  color: Color(0xFF2E3085),
+                  color: primaryColor,
                   size: 18,
                 ),
                 Positioned(
@@ -335,30 +362,30 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
+                children: [
+                  const Text(
                     'Data Backup: ON',
                     style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
                       color: Color(0xFF1A1A1A),
                     ),
                   ),
-                  SizedBox(height: 1),
+                  const SizedBox(height: 2),
                   Text(
                     'Auto-save bills and data online',
                     style: TextStyle(
                       fontSize: 11,
-                      color: Color(0xFF6C757D),
+                      color: Colors.grey[600],
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  SizedBox(height: 1),
+                  const SizedBox(height: 2),
                   Text(
                     'Last: Thu, 07 Aug 2025 01:12 am',
                     style: TextStyle(
                       fontSize: 10,
-                      color: Color(0xFF6C757D),
+                      color: Colors.grey[600],
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -368,7 +395,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             Icon(
               Icons.arrow_forward_ios,
               color: primaryColor,
-              size: 14,
+              size: 12,
             ),
           ],
         ),
@@ -388,7 +415,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       builder: (BuildContext context) {
         return Padding(
           padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 
+                   MediaQuery.of(context).padding.bottom,
           ),
           child: Container(
             padding: const EdgeInsets.all(16),
@@ -510,7 +538,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           builder: (BuildContext context, StateSetter setState) {
             return Padding(
               padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 
+                       MediaQuery.of(context).padding.bottom,
               ),
               child: Container(
                 padding: const EdgeInsets.all(16),
@@ -652,7 +681,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       builder: (BuildContext context) {
         return Padding(
           padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 
+                   MediaQuery.of(context).padding.bottom,
           ),
           child: Container(
             padding: const EdgeInsets.all(16),

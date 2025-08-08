@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class InviteEarnScreen extends StatelessWidget {
   const InviteEarnScreen({super.key});
@@ -43,8 +44,9 @@ class InviteEarnScreen extends StatelessWidget {
           'Invite & Earn',
           style: TextStyle(
             color: primaryColor,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+            fontFamily: GoogleFonts.openSans().fontFamily,
           ),
         ),
         centerTitle: true,
