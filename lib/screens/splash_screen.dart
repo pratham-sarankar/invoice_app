@@ -1,16 +1,52 @@
 import 'package:flutter/material.dart';
+import '../utils/auth_utils.dart';
 
 // Splash Screen
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
   // Theme colors
   static const Color primaryColor = Color(0xFF2E3085);
   static const Color secondaryColor = Color(0xFF4E4AA8);
 
   @override
-  Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushReplacementNamed(context, '/login');
+  void initState() {
+    super.initState();
+    // Use a safe navigation approach
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(Duration(seconds: 2), () {
+        if (mounted) {
+          _checkAuthStatus();
+        }
+      });
     });
+  }
+
+  Future<void> _checkAuthStatus() async {
+    try {
+      final isLoggedIn = await AuthUtils.isLoggedIn();
+      if (mounted) {
+        if (isLoggedIn) {
+          // User is already logged in, navigate to main screen
+          Navigator.pushReplacementNamed(context, '/main');
+        } else {
+          // User is not logged in, navigate to login screen
+          Navigator.pushReplacementNamed(context, '/login');
+        }
+      }
+    } catch (e) {
+      // If there's an error, default to login screen
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(

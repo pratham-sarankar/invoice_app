@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pinput/pinput.dart';
 import 'dart:async';
+import '../services/api_service.dart';
+import '../constants/api_constants.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
   final String phoneNumber;
@@ -67,10 +69,9 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> with Tick
   void _onOTPChanged() {
     _enteredOTP = otpController.text;
     
-    // Auto-verify when all 4 digits are entered
-    if (_enteredOTP.length == 4) {
-      _verifyOTP();
-    }
+    // Note: Auto-verification is now handled by the Pinput onCompleted callback
+    // This prevents duplicate API calls. We only track the OTP text here.
+    print('🔐 [DEBUG] OTP text changed to: $_enteredOTP (length: ${_enteredOTP.length})');
   }
 
   void _startResendTimer() {
@@ -93,56 +94,161 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> with Tick
 
   void _resendOTP() async {
     if (!_isResendEnabled) return;
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    // Simulate resending OTP
-    await Future.delayed(Duration(seconds: 2));
-
-    setState(() {
-      _isLoading = false;
-    });
-
-    _startResendTimer();
     
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('OTP resent successfully!'),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
+    // Prevent multiple simultaneous API calls
+    if (_isLoading) return;
+
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
+
+    try {
+      // Extract phone number without +91 prefix for API call
+      String phoneNumber = widget.phoneNumber;
+      if (phoneNumber.startsWith('+91')) {
+        phoneNumber = phoneNumber.substring(3); // Remove +91 prefix
+      }
+
+      // Call the API to resend OTP
+      final result = await ApiService.sendOTP('+91$phoneNumber');
+      
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+
+      if (result[ApiConstants.successKey]) {
+        // Show success message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('OTP resent successfully!'),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          );
+        }
+        
+        // Reset the timer
+        _startResendTimer();
+      } else {
+        // Show error message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(result[ApiConstants.messageKey]),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+      
+      // Show error message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('An unexpected error occurred. Please try again.'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        );
+      }
+    }
   }
 
   void _verifyOTP() async {
     if (_enteredOTP.length != 4) return;
+    
+    // Prevent multiple simultaneous API calls
+    if (_isLoading) return;
 
-    setState(() {
-      _isLoading = true;
-    });
+    print('🔐 [DEBUG] Starting OTP verification...');
+    print('   Phone: ${widget.phoneNumber}');
+    print('   OTP: $_enteredOTP');
 
-    // Simulate OTP verification
-    await Future.delayed(Duration(seconds: 2));
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
 
-    setState(() {
-      _isLoading = false;
-    });
+    try {
+      // Extract phone number without +91 prefix for API call
+      String phoneNumber = widget.phoneNumber;
+      if (phoneNumber.startsWith('+91')) {
+        phoneNumber = phoneNumber.substring(3); // Remove +91 prefix
+      }
 
-    // For demo purposes, accept any 4-digit OTP
-    if (_enteredOTP.length == 4) {
-      Navigator.pushReplacementNamed(context, '/main');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Invalid OTP. Please try again.'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-      );
+      // Call the API to verify OTP
+      final result = await ApiService.verifyOTP(phoneNumber, _enteredOTP);
+      
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+
+      if (result[ApiConstants.successKey]) {
+        // Show success message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(result[ApiConstants.messageKey]),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          );
+        }
+        
+        // Navigate to complete profile screen on successful verification
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/complete-profile', arguments: widget.phoneNumber);
+        }
+      } else {
+        // Show error message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(result[ApiConstants.messageKey]),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+      
+      // Show error message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('An unexpected error occurred. Please try again.'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        );
+      }
     }
   }
 
@@ -301,6 +407,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> with Tick
                                    pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                                    showCursor: true,
                                    onCompleted: (pin) {
+                                     print('🔐 [DEBUG] Pinput onCompleted triggered with pin: $pin');
                                      _enteredOTP = pin;
                                      _verifyOTP();
                                    },
@@ -313,7 +420,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> with Tick
                                 width: double.infinity,
                                 height: 48,
                                 child: ElevatedButton(
-                                  onPressed: _isLoading || _enteredOTP.length != 4 ? null : _verifyOTP,
+                                  onPressed: (_isLoading || _enteredOTP.length != 4) ? null : () {
+                                    print('🔐 [DEBUG] Verify button pressed manually');
+                                    _verifyOTP();
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: primaryColor,
                                     foregroundColor: Colors.white,
@@ -373,7 +483,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> with Tick
                                           ),
                                         if (_isResendEnabled)
                                           TextButton(
-                                            onPressed: _resendOTP,
+                                            onPressed: _isLoading ? null : () {
+                                              print('🔐 [DEBUG] Resend OTP button pressed');
+                                              _resendOTP();
+                                            },
                                             child: Text(
                                               'Resend OTP',
                                               style: theme.textTheme.bodyMedium?.copyWith(
@@ -388,23 +501,6 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> with Tick
                                 ),
                               ),
                               SizedBox(height: 20),
-                              
-                              // Demo Login Option
-                              Center(
-                                child: TextButton.icon(
-                                  onPressed: () {
-                                    Navigator.pushReplacementNamed(context, '/main');
-                                  },
-                                  icon: Icon(Icons.play_arrow, size: 16),
-                                  label: Text(
-                                    'Demo Login',
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      color: primaryColor,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ),
                             ],
                           ),
                         ),

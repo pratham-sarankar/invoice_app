@@ -84,7 +84,31 @@ class _HomeDashboardState extends State<HomeDashboard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // --- Dashboard Cards Section (3x2 grid) ---
+              // --- Top Row Cards Section (Invoices, Purchase) ---
+              Row(
+                children: [
+                  Expanded(
+                    child: _TopRowCard(
+                      icon: Icons.description,
+                      title: 'Invoices',
+                      color: Color(0xFFFFEB3B), // Yellow background
+                      onTap: () => Navigator.pushNamed(context, '/create-invoice'),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: _TopRowCard(
+                      icon: Icons.description,
+                      title: 'Purchase',
+                      color: Color(0xFF1976D2), // Dark blue background
+                      onTap: () => Navigator.pushNamed(context, '/purchase'),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 18),
+              
+              // --- Dashboard Cards Section (2x2 grid) ---
               GridView.count(
                 crossAxisCount: 2,
                 shrinkWrap: true,
@@ -93,85 +117,56 @@ class _HomeDashboardState extends State<HomeDashboard> {
                 mainAxisSpacing: 10,
                 childAspectRatio: 2.3,
                 children: [
-                                     // To Collect Card (Green)
-                   _CompactDashboardCard(
-                     icon: null,
-                     title: '',
-                     value: '₹ 440',
-                     color: Colors.green[100]!,
-                     subtitle: 'To Collect',
-                     small: true,
-                     rightArrow: true,
-                     valueColor: Colors.green[900],
-                     showArrow: true,
-                     arrowDirection: 'down',
-                     primaryColor: primaryColor,
-                   ),
-                   // To Pay Card (Red)
-                   _CompactDashboardCard(
-                     icon: null,
-                     title: '',
-                     value: '₹ 0',
-                     color: Colors.red[100]!,
-                     subtitle: 'To Pay',
-                     small: true,
-                     rightArrow: true,
-                     valueColor: Colors.red[900],
-                     showArrow: true,
-                     arrowDirection: 'up',
-                     primaryColor: primaryColor,
-                   ),
-                   // Purchase Card (Orange Theme)
-                   GestureDetector(
-                     onTap: () => Navigator.pushNamed(context, '/purchase'),
-                     child: _CompactDashboardCard(
-                       icon: null,
-                       title: '',
-                       value: 'Purchase',
-                       color: Color(0xFFFFF3E0), // Light orange background
-                       subtitle: 'Value of Items',
-                       small: true,
-                       rightArrow: true,
-                       valueColor: Color(0xFFE65100), // Dark orange text
-                       primaryColor: Color(0xFFE65100),
-                     ),
-                   ),
-                   // This week's sale Card (Blue Theme)
-                   _CompactDashboardCard(
-                     icon: null,
-                     title: '',
-                     value: '₹ 440',
-                     color: Color(0xFFE3F2FD), // Light blue background
-                     subtitle: "This week's sale",
-                     small: true,
-                     rightArrow: true,
-                     valueColor: Color(0xFF1565C0), // Dark blue text
-                     primaryColor: Color(0xFF1565C0),
-                   ),
-                   // Total Balance Card (Purple Theme)
-                   _CompactDashboardCard(
-                     icon: null,
-                     title: '',
-                     value: 'Total Balance',
-                     color: Color(0xFFF3E5F5), // Light purple background
-                     subtitle: 'Cash + Bank Balance',
-                     small: true,
-                     rightArrow: true,
-                     valueColor: Color(0xFF7B1FA2), // Dark purple text
-                     primaryColor: Color(0xFF7B1FA2),
-                   ),
-                   // Reports Card (Teal Theme)
-                   _CompactDashboardCard(
-                     icon: null,
-                     title: '',
-                     value: 'Reports',
-                     color: Color(0xFFE0F2F1), // Light teal background
-                     subtitle: 'Sales, Party, GST...',
-                     small: true,
-                     rightArrow: true,
-                     valueColor: Color(0xFF00695C), // Dark teal text
-                     primaryColor: Color(0xFF00695C),
-                   ),
+                  // To Collect Card (Green)
+                  _CompactDashboardCard(
+                    icon: null,
+                    title: '',
+                    value: '₹ 440',
+                    color: Colors.green[100]!,
+                    subtitle: 'To Collect',
+                    small: true,
+                    rightArrow: true,
+                    valueColor: Colors.green[900],
+                    showArrow: true,
+                    arrowDirection: 'down',
+                    primaryColor: primaryColor,
+                  ),
+                  // This week's sale Card (Blue Theme)
+                  _CompactDashboardCard(
+                    icon: null,
+                    title: '',
+                    value: '₹ 440',
+                    color: Color(0xFFE3F2FD), // Light blue background
+                    subtitle: "This week's sale",
+                    small: true,
+                    rightArrow: true,
+                    valueColor: Color(0xFF1565C0), // Dark blue text
+                    primaryColor: Color(0xFF1565C0),
+                  ),
+                  // Total Balance Card (Purple Theme)
+                  _CompactDashboardCard(
+                    icon: null,
+                    title: '',
+                    value: 'Total Balance',
+                    color: Color(0xFFF3E5F5), // Light purple background
+                    subtitle: 'Cash + Bank Balance',
+                    small: true,
+                    rightArrow: true,
+                    valueColor: Color(0xFF7B1FA2), // Dark purple text
+                    primaryColor: Color(0xFF7B1FA2),
+                  ),
+                  // Reports Card (Teal Theme)
+                  _CompactDashboardCard(
+                    icon: null,
+                    title: '',
+                    value: 'Reports',
+                    color: Color(0xFFE0F2F1), // Light teal background
+                    subtitle: 'Sales, Party, GST...',
+                    small: true,
+                    rightArrow: true,
+                    valueColor: Color(0xFF00695C), // Dark teal text
+                    primaryColor: Color(0xFF00695C),
+                  ),
                 ],
               ),
               SizedBox(height: 18),
@@ -370,7 +365,100 @@ class _HomeDashboardState extends State<HomeDashboard> {
 }
 
 // Update _CompactDashboardCard to support arrow indicators
- class _CompactDashboardCard extends StatelessWidget {
+ class _TopRowCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final Color color;
+  final VoidCallback? onTap;
+
+  const _TopRowCard({
+    required this.icon,
+    required this.title,
+    required this.color,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 16,
+              offset: Offset(0, 4),
+              spreadRadius: 0,
+            ),
+          ],
+          // ignore: deprecated_member_use
+          border: Border.all(color: Colors.grey.withOpacity(0.08), width: 0.8),
+        ),
+        padding: EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Circular icon container
+            Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: color.withOpacity(0.25),
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
+                      spreadRadius: 0,
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 16,
+                ),
+              ),
+            ),
+            SizedBox(height: 16),
+            // Title and arrow in same row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Title text
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF2D3748),
+                    letterSpacing: 0.2,
+                    height: 1.1,
+                  ),
+                ),
+                // Right arrow
+                Icon(
+                  Icons.arrow_forward,
+                  size: 14,
+                  color: Color(0xFF718096),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CompactDashboardCard extends StatelessWidget {
    final IconData? icon;
    final String title;
    final String value;
@@ -382,6 +470,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
    final bool showArrow;
    final String arrowDirection;
    final Color primaryColor;
+   final bool showIcon;
 
      const _CompactDashboardCard({
      this.icon,
@@ -395,6 +484,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
      this.showArrow = false,
      this.arrowDirection = 'down',
      required this.primaryColor,
+     this.showIcon = false,
    });
 
   @override
@@ -422,6 +512,22 @@ class _HomeDashboardState extends State<HomeDashboard> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          if (showIcon && icon != null) ...[
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: primaryColor,
+                size: 20,
+              ),
+            ),
+            SizedBox(width: 12),
+          ],
           Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,

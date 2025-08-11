@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../services/api_service.dart';
+import '../constants/api_constants.dart';
+import '../utils/auth_utils.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -78,19 +81,97 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   void _handleSendOTP() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _isLoading = true;
-    });
+    print('🚀 [DEBUG] Starting OTP send process...');
+    print('   Phone number: ${phoneController.text}');
+    print('   Full phone: +91${phoneController.text}');
 
-    // Simulate OTP sending process
-    await Future.delayed(Duration(seconds: 2));
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
 
-    setState(() {
-      _isLoading = false;
-    });
+    try {
+      // Call the API to send OTP
+      print('📞 [DEBUG] Calling ApiService.sendOTP...');
+      final result = await ApiService.sendOTP('+91${phoneController.text}');
+      
+      print('📱 [DEBUG] API Response received:');
+      print('   Result: $result');
+      print('   Success: ${result[ApiConstants.successKey]}');
+      print('   Message: ${result[ApiConstants.messageKey]}');
+      
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
 
-    // Navigate to OTP verification screen with +91 prefix
-    Navigator.pushNamed(context, '/otp-verification', arguments: '+91${phoneController.text}');
+      if (result[ApiConstants.successKey]) {
+        print('✅ [DEBUG] OTP sent successfully!');
+        // Show success message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(result[ApiConstants.messageKey]),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+        }
+        
+        // Navigate to OTP verification screen with +91 prefix
+        if (mounted) {
+          print('🔄 [DEBUG] Navigating to OTP verification screen...');
+          Navigator.pushNamed(context, '/otp-verification', arguments: '+91${phoneController.text}');
+        }
+      } else {
+        print('❌ [DEBUG] OTP send failed!');
+        print('   Error message: ${result[ApiConstants.messageKey]}');
+        print('   Error type: ${result[ApiConstants.errorKey]}');
+        // Show error message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(result[ApiConstants.messageKey]),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      print('💥 [DEBUG] Exception in _handleSendOTP:');
+      print('   Error: $e');
+      print('   Error type: ${e.runtimeType}');
+      print('   Stack trace: ${StackTrace.current}');
+      
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+      
+      // Show error message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('An unexpected error occurred. Please try again.'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -297,44 +378,32 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                               ),
                               SizedBox(height: 16),
                               
-                              // Divider
-                              Row(
-                                children: [
-                                  Expanded(child: Divider(color: Colors.grey[300])),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 16),
-                                    child: Text(
-                                      'or',
-                                      style: theme.textTheme.bodyMedium?.copyWith(
-                                        color: Colors.grey[600],
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(child: Divider(color: Colors.grey[300])),
-                                ],
-                              ),
-                              SizedBox(height: 20),
-                              
-                              // Demo Login Button
+                              // Skip Login Button (for development)
                               SizedBox(
                                 width: double.infinity,
-                                height: 44,
-                                child: OutlinedButton.icon(
-                                  onPressed: _isLoading ? null : () {
-                                    Navigator.pushReplacementNamed(context, '/main');
+                                height: 40,
+                                child: OutlinedButton(
+                                  onPressed: () async {
+                                    // Set user as logged in with default values for development
+                                    await AuthUtils.setLoggedIn(
+                                      phone: '+911234567890',
+                                      name: 'Demo User',
+                                    );
+                                    if (mounted) {
+                                      Navigator.pushReplacementNamed(context, '/main');
+                                    }
                                   },
                                   style: OutlinedButton.styleFrom(
-                                    foregroundColor: primaryColor,
-                                    side: BorderSide(color: primaryColor),
+                                    side: BorderSide(color: primaryColor, width: 1),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  icon: Icon(Icons.play_arrow, size: 18),
-                                  label: Text(
-                                    'Demo Login',
-                                    style: theme.textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.w600,
+                                  child: Text(
+                                    'Skip Login (Demo)',
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: primaryColor,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ),

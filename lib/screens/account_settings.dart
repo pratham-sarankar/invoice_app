@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../utils/auth_utils.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   const AccountSettingsScreen({super.key});
@@ -16,12 +17,40 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   static const Color borderColor = Color(0xFFE9ECEF);
   
   // Controllers for text fields
-  final TextEditingController _nameController = TextEditingController(text: 'User Name');
-  final TextEditingController _mobileController = TextEditingController(text: '1234567890');
+  late TextEditingController _nameController;
+  late TextEditingController _mobileController;
   
   // State variables
   bool _appLockEnabled = false;
   bool _dataBackupEnabled = true;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController();
+    _mobileController = TextEditingController();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      final userName = await AuthUtils.getUserName() ?? 'User Name';
+      final userPhone = await AuthUtils.getUserPhone() ?? '1234567890';
+      
+      setState(() {
+        _nameController.text = userName;
+        _mobileController.text = userPhone;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _nameController.text = 'User Name';
+        _mobileController.text = '1234567890';
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -103,6 +132,53 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   }
 
   Widget _buildUserInfoSection() {
+    if (_isLoading) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'User Information',
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1A1A1A),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: borderColor,
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: const Row(
+              children: [
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2E3085)),
+                  ),
+                ),
+                SizedBox(width: 12),
+                Text(
+                  'Loading user data...',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF6C757D),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -156,6 +232,14 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               isDense: true,
               contentPadding: EdgeInsets.zero,
             ),
+            onChanged: (value) {
+              // Save changes automatically
+              if (label == 'Name') {
+                AuthUtils.updateUserName(value);
+              } else if (label == 'Mobile Number') {
+                AuthUtils.updateUserPhone(value);
+              }
+            },
           ),
         ),
       ],
@@ -746,13 +830,16 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       Navigator.of(context).pop();
-                      // Navigate to login screen
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/login',
-                        (route) => false,
-                      );
+                      // Logout user and navigate to login screen
+                      await AuthUtils.logout();
+                      if (mounted) {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          '/login',
+                          (route) => false,
+                        );
+                      }
                     },
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(color: primaryColor, width: 1),

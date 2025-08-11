@@ -17,6 +17,7 @@ import 'package:invoice_app/screens/subscription_screen.dart';
 import 'package:invoice_app/screens/account_settings.dart';
 import 'package:invoice_app/screens/reminder_settings_screen.dart';
 import 'package:invoice_app/screens/otp_verification_screen.dart';
+import 'package:invoice_app/screens/complete_profile_screen.dart';
 import 'package:invoice_app/screens/purchase_screen.dart';
 import 'package:invoice_app/screens/upload_bill_screen.dart';
 import 'package:invoice_app/screens/manage_companies_screen.dart';
@@ -218,6 +219,10 @@ class _RestaurantInvoiceAppState extends State<RestaurantInvoiceApp> {
         '/otp-verification': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as String?;
           return OTPVerificationScreen(phoneNumber: args ?? '');
+        },
+        '/complete-profile': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as String?;
+          return CompleteProfileScreen(phoneNumber: args ?? '');
         },
         '/settings':
             (context) => SettingsScreen(

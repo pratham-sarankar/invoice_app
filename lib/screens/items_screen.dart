@@ -79,7 +79,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
   @override
   Widget build(BuildContext context) {
     final filteredItems = _getFilteredItems();
-    
+
     return Scaffold(
       backgroundColor: const Color(0xFFFAFBFC),
       appBar: _buildAppBar(),
@@ -87,9 +87,10 @@ class _ItemsScreenState extends State<ItemsScreen> {
         children: [
           _buildFilters(),
           Expanded(
-            child: filteredItems.isEmpty
-                ? _buildEmptyState()
-                : _buildItemsList(filteredItems),
+            child:
+                filteredItems.isEmpty
+                    ? _buildEmptyState()
+                    : _buildItemsList(filteredItems),
           ),
         ],
       ),
@@ -179,10 +180,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
         children: [
           // Low Stock Toggle
           FilterChip(
-            label: const Text(
-              'Low Stock',
-              style: TextStyle(fontSize: 13),
-            ),
+            label: const Text('Low Stock', style: TextStyle(fontSize: 13)),
             selected: false, // This state variable is not used in the new code
             onSelected: (bool value) {
               // setState(() {
@@ -193,9 +191,16 @@ class _ItemsScreenState extends State<ItemsScreen> {
             selectedColor: primaryColor.withOpacity(0.1),
             checkmarkColor: primaryColor,
             labelStyle: TextStyle(
-              color: false ? primaryColor : Colors.grey[800], // This state variable is not used in the new code
+              color:
+                  false
+                      ? primaryColor
+                      : Colors
+                          .grey[800], // This state variable is not used in the new code
               fontWeight:
-                  false ? FontWeight.w500 : FontWeight.normal, // This state variable is not used in the new code
+                  false
+                      ? FontWeight.w500
+                      : FontWeight
+                          .normal, // This state variable is not used in the new code
             ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -203,7 +208,9 @@ class _ItemsScreenState extends State<ItemsScreen> {
                 color:
                     false
                         ? primaryColor
-                        : Colors.grey.withOpacity(0.3), // This state variable is not used in the new code
+                        : Colors.grey.withOpacity(
+                          0.3,
+                        ), // This state variable is not used in the new code
               ),
             ),
           ),
@@ -223,10 +230,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
                   iconSize: 20,
                   elevation: 1,
                   isExpanded: true,
-                  style: const TextStyle(
-                    color: Colors.black87,
-                    fontSize: 13,
-                  ),
+                  style: const TextStyle(color: Colors.black87, fontSize: 13),
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   onChanged: (String? newValue) {
                     setState(() {
@@ -269,10 +273,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
                   const SizedBox(width: 4),
                   Text(
                     'All',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[700],
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                   ),
                 ],
               ),
@@ -286,7 +287,12 @@ class _ItemsScreenState extends State<ItemsScreen> {
   Widget _buildItemsList(List<Item> items) {
     return ListView.builder(
       itemCount: items.length,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      padding: const EdgeInsets.only(
+        left: 8,
+        right: 8,
+        top: 8,
+        bottom: 80, // Add bottom padding to prevent FAB overlap
+      ),
       itemBuilder: (context, index) {
         final item = items[index];
         return _buildItemCard(item);
@@ -298,10 +304,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
     return Center(
       child: Text(
         'No items found. Add a new item!',
-        style: TextStyle(
-          fontSize: 18,
-          color: Colors.grey[600],
-        ),
+        style: TextStyle(fontSize: 18, color: Colors.grey[600]),
       ),
     );
   }
@@ -334,19 +337,31 @@ class _ItemsScreenState extends State<ItemsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: 40,
-                      height: 40,
+                      width: 38,
+                      height: 38,
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(8),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [Colors.grey[300]!, Colors.grey[500]!],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
                       child: Center(
                         child: Text(
                           'S',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey[500],
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            letterSpacing: 0.5,
                           ),
                         ),
                       ),
@@ -401,9 +416,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    SizedBox(
-                      width: 50,
-                    ),
+                    SizedBox(width: 50),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -411,7 +424,8 @@ class _ItemsScreenState extends State<ItemsScreen> {
                           'Sales Price',
                           style: TextStyle(
                             fontSize: 11,
-                            color: Colors.grey[500],
+                            color: Colors.green[700],
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -433,7 +447,8 @@ class _ItemsScreenState extends State<ItemsScreen> {
                           'Purchase Price',
                           style: TextStyle(
                             fontSize: 11,
-                            color: Colors.grey[500],
+                            color: Colors.blue[700],
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -448,18 +463,22 @@ class _ItemsScreenState extends State<ItemsScreen> {
                       ],
                     ),
                     const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[50],
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Icon(
-                        Icons.tune,
-                        size: 18,
-                        color: Colors.grey[400],
-                      ),
-                    ),
+                                         Container(
+                       padding: const EdgeInsets.all(6),
+                       decoration: BoxDecoration(
+                         color: Colors.grey[50],
+                         borderRadius: BorderRadius.circular(8),
+                         border: Border.all(
+                           color: Colors.grey.withOpacity(0.2),
+                           width: 1,
+                         ),
+                       ),
+                       child: Icon(
+                         Icons.tune,
+                         size: 16,
+                         color: primaryColor,
+                       ),
+                     ),
                   ],
                 ),
               ],
@@ -502,7 +521,8 @@ class _ItemsScreenState extends State<ItemsScreen> {
                             .map(
                               (sort) => ChoiceChip(
                                 label: Text(sort),
-                                selected: false, // This state variable is not used in the new code
+                                selected:
+                                    false, // This state variable is not used in the new code
                                 onSelected: (bool selected) {
                                   // if (selected) {
                                   //   setState(() {
@@ -528,7 +548,8 @@ class _ItemsScreenState extends State<ItemsScreen> {
                             .map(
                               (filter) => ChoiceChip(
                                 label: Text(filter),
-                                selected: false, // This state variable is not used in the new code
+                                selected:
+                                    false, // This state variable is not used in the new code
                                 onSelected: (bool selected) {
                                   // if (selected) {
                                   //   setState(() {
@@ -544,7 +565,8 @@ class _ItemsScreenState extends State<ItemsScreen> {
                   const SizedBox(height: 16),
                   SwitchListTile(
                     title: const Text('In Online Store'),
-                    value: false, // This state variable is not used in the new code
+                    value:
+                        false, // This state variable is not used in the new code
                     onChanged: (bool value) {
                       // setState(() {
                       //   _isOnlineStore = value;
