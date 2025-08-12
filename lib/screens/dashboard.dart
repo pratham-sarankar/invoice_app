@@ -86,23 +86,20 @@ class _HomeDashboardState extends State<HomeDashboard> {
             children: [
               // --- Top Row Cards Section (Invoices, Purchase) ---
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: _TopRowCard(
-                      icon: Icons.description,
-                      title: 'Invoices',
-                      color: Color(0xFFFFEB3B), // Yellow background
-                      onTap: () => Navigator.pushNamed(context, '/create-invoice'),
-                    ),
+                  _TopRowCard(
+                    icon: Icons.receipt_long,
+                    title: 'Invoices',
+                    color: Color(0xFFFF6B35), // Vibrant orange background
+                    onTap: () => Navigator.pushNamed(context, '/create-invoice'),
                   ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: _TopRowCard(
-                      icon: Icons.description,
-                      title: 'Purchase',
-                      color: Color(0xFF1976D2), // Dark blue background
-                      onTap: () => Navigator.pushNamed(context, '/purchase'),
-                    ),
+                  SizedBox(width: 16), // Consistent spacing
+                  _TopRowCard(
+                    icon: Icons.shopping_cart,
+                    title: 'Purchase',
+                    color: Color(0xFF4CAF50), // Vibrant green background
+                    onTap: () => Navigator.pushNamed(context, '/purchase'),
                   ),
                 ],
               ),
@@ -365,7 +362,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
 }
 
 // Update _CompactDashboardCard to support arrow indicators
- class _TopRowCard extends StatelessWidget {
+ class _TopRowCard extends StatefulWidget {
   final IconData icon;
   final String title;
   final Color color;
@@ -379,80 +376,169 @@ class _HomeDashboardState extends State<HomeDashboard> {
   });
 
   @override
+  State<_TopRowCard> createState() => _TopRowCardState();
+}
+
+class _TopRowCardState extends State<_TopRowCard> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+  bool _isPressed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: Duration(milliseconds: 150),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _onTapDown(TapDownDetails details) {
+    setState(() {
+      _isPressed = true;
+    });
+    _animationController.forward();
+  }
+
+  void _onTapUp(TapUpDetails details) {
+    setState(() {
+      _isPressed = false;
+    });
+    _animationController.reverse();
+  }
+
+  void _onTapCancel() {
+    setState(() {
+      _isPressed = false;
+    });
+    _animationController.reverse();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 16,
-              offset: Offset(0, 4),
-              spreadRadius: 0,
-            ),
-          ],
-          // ignore: deprecated_member_use
-          border: Border.all(color: Colors.grey.withOpacity(0.08), width: 0.8),
-        ),
-        padding: EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Circular icon container
-            Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                width: 30,
-                height: 30,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: color.withOpacity(0.25),
-                      blurRadius: 8,
-                      offset: Offset(0, 2),
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  icon,
-                  color: Colors.white,
-                  size: 16,
+      onTap: widget.onTap,
+      onTapDown: _onTapDown,
+      onTapUp: _onTapUp,
+      onTapCancel: _onTapCancel,
+      child: AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+              width: MediaQuery.of(context).size.width * 0.44, // Slightly wider for better proportions
+              height: 110, // Slightly shorter for better proportions
+              decoration: BoxDecoration(
+                color: Colors.white, // Clean white background
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(_isPressed ? 0.12 : 0.08),
+                    blurRadius: _isPressed ? 24 : 20,
+                    offset: Offset(0, _isPressed ? 6 : 4),
+                    spreadRadius: 0,
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(_isPressed ? 0.06 : 0.04),
+                    blurRadius: _isPressed ? 10 : 8,
+                    offset: Offset(0, _isPressed ? 3 : 2),
+                    spreadRadius: 0,
+                  ),
+                ],
+                border: Border.all(
+                  color: Colors.grey.withOpacity(_isPressed ? 0.18 : 0.12),
+                  width: _isPressed ? 1.2 : 1,
                 ),
               ),
-            ),
-            SizedBox(height: 16),
-            // Title and arrow in same row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Title text
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF2D3748),
-                    letterSpacing: 0.2,
-                    height: 1.1,
+              padding: EdgeInsets.all(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Circular icon container with professional styling
+                  Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          widget.color,
+                          widget.color.withOpacity(0.8),
+                        ],
+                      ),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: widget.color.withOpacity(_isPressed ? 0.35 : 0.25),
+                          blurRadius: _isPressed ? 10 : 8,
+                          offset: Offset(0, _isPressed ? 3 : 2),
+                          spreadRadius: 0,
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      widget.icon,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
-                ),
-                // Right arrow
-                Icon(
-                  Icons.arrow_forward,
-                  size: 14,
-                  color: Color(0xFF718096),
-                ),
-              ],
+                  
+                  // Title and arrow in same row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Title text with professional styling
+                      Expanded(
+                        child: Text(
+                          widget.title,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[800],
+                            letterSpacing: 0.2,
+                            height: 1.2,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      // Professional arrow indicator
+                      Container(
+                        padding: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[_isPressed ? 150 : 100],
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 14,
+                          color: Colors.grey[_isPressed ? 700 : 600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
