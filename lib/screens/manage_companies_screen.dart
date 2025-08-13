@@ -17,7 +17,7 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
   // Sample company data
   final List<Map<String, dynamic>> myCompanies = [
     {
-      'name': 'Act t Connect',
+      'name': 'Act T Connect',
       'id': '1234567890',
       'status': 'active',
       'syncStatus': true, // true for sync on, false for sync off
@@ -51,9 +51,10 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarColor: theme.scaffoldBackgroundColor,
-        statusBarIconBrightness: theme.brightness == Brightness.light 
-            ? Brightness.dark 
-            : Brightness.light,
+        statusBarIconBrightness:
+            theme.brightness == Brightness.light
+                ? Brightness.dark
+                : Brightness.light,
       ),
       child: Scaffold(
         backgroundColor: theme.colorScheme.surface,
@@ -64,9 +65,7 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: [
-                  _buildMyCompaniesTab(theme),
-                ],
+                children: [_buildMyCompaniesTab(theme)],
               ),
             ),
           ],
@@ -202,9 +201,7 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
           letterSpacing: 0.2,
         ),
         dividerColor: Colors.transparent,
-                 tabs: const [
-           Tab(text: 'My Companies'),
-         ],
+        tabs: const [Tab(text: 'My Companies')],
       ),
     );
   }
@@ -280,6 +277,8 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
                           company['name'],
@@ -294,9 +293,12 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
                           width: 8,
                           height: 8,
                           decoration: BoxDecoration(
-                            color: company['status'] == 'active' 
-                                ? Colors.green 
-                                : theme.colorScheme.onSurface.withOpacity(0.3),
+                            color:
+                                company['status'] == 'active'
+                                    ? Colors.green
+                                    : theme.colorScheme.onSurface.withOpacity(
+                                      0.3,
+                                    ),
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -314,44 +316,61 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
                           ),
                         ),
                         const SizedBox(width: 12),
-                                                 Container(
-                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                           decoration: BoxDecoration(
-                             color: (company['syncStatus'] ?? false) 
-                                 ? theme.colorScheme.primary.withOpacity(0.1)
-                                 : theme.colorScheme.onSurface.withOpacity(0.1),
-                             borderRadius: BorderRadius.circular(12),
-                             border: Border.all(
-                               color: (company['syncStatus'] ?? false)
-                                   ? theme.colorScheme.primary.withOpacity(0.3)
-                                   : theme.colorScheme.onSurface.withOpacity(0.3),
-                               width: 1,
-                             ),
-                           ),
-                           child: Row(
-                             mainAxisSize: MainAxisSize.min,
-                             children: [
-                               Icon(
-                                 Icons.sync,
-                                 size: 12,
-                                 color: (company['syncStatus'] ?? false)
-                                     ? theme.colorScheme.primary
-                                     : theme.colorScheme.onSurface.withOpacity(0.5),
-                               ),
-                               const SizedBox(width: 4),
-                               Text(
-                                 (company['syncStatus'] ?? false) ? 'Sync On' : 'Sync Off',
-                                 style: theme.textTheme.labelSmall?.copyWith(
-                                   fontSize: 10,
-                                   fontWeight: FontWeight.w600,
-                                   color: (company['syncStatus'] ?? false)
-                                       ? theme.colorScheme.primary
-                                       : theme.colorScheme.onSurface.withOpacity(0.5),
-                                 ),
-                               ),
-                             ],
-                           ),
-                         ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color:
+                                (company['syncStatus'] ?? false)
+                                    ? theme.colorScheme.primary.withOpacity(0.1)
+                                    : theme.colorScheme.onSurface.withOpacity(
+                                      0.1,
+                                    ),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color:
+                                  (company['syncStatus'] ?? false)
+                                      ? theme.colorScheme.primary.withOpacity(
+                                        0.3,
+                                      )
+                                      : theme.colorScheme.onSurface.withOpacity(
+                                        0.3,
+                                      ),
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.sync,
+                                size: 12,
+                                color:
+                                    (company['syncStatus'] ?? false)
+                                        ? theme.colorScheme.primary
+                                        : theme.colorScheme.onSurface
+                                            .withOpacity(0.5),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                (company['syncStatus'] ?? false)
+                                    ? 'Sync On'
+                                    : 'Sync Off',
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  color:
+                                      (company['syncStatus'] ?? false)
+                                          ? theme.colorScheme.primary
+                                          : theme.colorScheme.onSurface
+                                              .withOpacity(0.5),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -373,41 +392,49 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
     );
   }
 
-
-
   void _showMoreOptions(ThemeData theme) {
     showModalBottomSheet(
       context: context,
       backgroundColor: theme.colorScheme.surface,
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).padding.bottom,
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: Icon(Icons.settings, color: theme.colorScheme.onSurface),
-                title: Text('Settings', style: theme.textTheme.bodyMedium),
-                onTap: () {
-                  Navigator.pop(context);
-                  // Navigate to settings
-                },
+      builder:
+          (context) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).padding.bottom,
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: Icon(
+                      Icons.settings,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    title: Text('Settings', style: theme.textTheme.bodyMedium),
+                    onTap: () {
+                      Navigator.pop(context);
+                      // Navigate to settings
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.help_outline,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    title: Text(
+                      'Help & Support',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      // Navigate to help
+                    },
+                  ),
+                ],
               ),
-              ListTile(
-                leading: Icon(Icons.help_outline, color: theme.colorScheme.onSurface),
-                title: Text('Help & Support', style: theme.textTheme.bodyMedium),
-                onTap: () {
-                  Navigator.pop(context);
-                  // Navigate to help
-                },
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
     );
   }
 
@@ -415,39 +442,49 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
     showModalBottomSheet(
       context: context,
       backgroundColor: theme.colorScheme.surface,
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).padding.bottom,
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: Icon(Icons.edit, color: theme.colorScheme.onSurface),
-                title: Text('Rename Company', style: theme.textTheme.bodyMedium),
-                onTap: () {
-                  Navigator.pop(context);
-                  _renameCompany(company);
-                },
+      builder:
+          (context) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).padding.bottom,
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: Icon(
+                      Icons.edit,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    title: Text(
+                      'Rename Company',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _renameCompany(company);
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.delete, color: theme.colorScheme.error),
+                    title: Text(
+                      'Delete Company',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.error,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _deleteCompany(company);
+                    },
+                  ),
+                ],
               ),
-              ListTile(
-                leading: Icon(Icons.delete, color: theme.colorScheme.error),
-                title: Text('Delete Company', style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.error)),
-                onTap: () {
-                  Navigator.pop(context);
-                  _deleteCompany(company);
-                },
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
     );
   }
-
-
 
   void _addCompany() {
     // Navigate to add company screen
@@ -455,92 +492,96 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
   }
 
   void _renameCompany(Map<String, dynamic> company) {
-    final TextEditingController nameController = TextEditingController(text: company['name']);
+    final TextEditingController nameController = TextEditingController(
+      text: company['name'],
+    );
     final theme = Theme.of(context);
-    
+
     showModalBottomSheet(
       context: context,
       backgroundColor: theme.colorScheme.surface,
       isScrollControlled: true,
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 
-                 MediaQuery.of(context).padding.bottom,
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      builder:
+          (context) => Padding(
+            padding: EdgeInsets.only(
+              bottom:
+                  MediaQuery.of(context).viewInsets.bottom +
+                  MediaQuery.of(context).padding.bottom,
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Rename Company',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Rename Company',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(Icons.close),
+                      ),
+                    ],
                   ),
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: Icon(Icons.close),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      labelText: 'Company Name',
+                      hintText: 'Enter new company name',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: theme.colorScheme.primary,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                    autofocus: true,
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Company renamed successfully'),
+                            backgroundColor: theme.colorScheme.primary,
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.primary,
+                        foregroundColor: theme.colorScheme.surface,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        'Rename',
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.surface,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Company Name',
-                  hintText: 'Enter new company name',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: theme.colorScheme.primary,
-                      width: 2,
-                    ),
-                  ),
-                ),
-                autofocus: true,
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Company renamed successfully'),
-                        backgroundColor: theme.colorScheme.primary,
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.colorScheme.primary,
-                    foregroundColor: theme.colorScheme.surface,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text(
-                    'Rename',
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.surface,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
     );
   }
 
@@ -561,120 +602,123 @@ class _ManageCompaniesScreenState extends State<ManageCompaniesScreen>
 
   void _deleteCompany(Map<String, dynamic> company) {
     final theme = Theme.of(context);
-    
+
     showModalBottomSheet(
       context: context,
       backgroundColor: theme.colorScheme.surface,
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).padding.bottom,
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      builder:
+          (context) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).padding.bottom,
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Delete Company',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: Icon(Icons.close),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.errorContainer.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: theme.colorScheme.error.withOpacity(0.2),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.warning_amber_rounded,
-                      color: theme.colorScheme.error,
-                      size: 24,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Are you sure you want to delete "${company['name']}"? This action cannot be undone.',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurface,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: Text(
-                        'Cancel',
-                        style: theme.textTheme.labelLarge,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        setState(() {
-                          myCompanies.remove(company);
-                        });
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${company['name']} deleted successfully'),
-                            backgroundColor: theme.colorScheme.primary,
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.error,
-                        foregroundColor: theme.colorScheme.surface,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: Text(
-                        'Delete',
-                        style: theme.textTheme.labelLarge?.copyWith(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Delete Company',
+                        style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: theme.colorScheme.surface,
                         ),
                       ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(Icons.close),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.errorContainer.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: theme.colorScheme.error.withOpacity(0.2),
+                      ),
                     ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.warning_amber_rounded,
+                          color: theme.colorScheme.error,
+                          size: 24,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Are you sure you want to delete "${company['name']}"? This action cannot be undone.',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            'Cancel',
+                            style: theme.textTheme.labelLarge,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            setState(() {
+                              myCompanies.remove(company);
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  '${company['name']} deleted successfully',
+                                ),
+                                backgroundColor: theme.colorScheme.primary,
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme.colorScheme.error,
+                            foregroundColor: theme.colorScheme.surface,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            'Delete',
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: theme.colorScheme.surface,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
     );
   }
-} 
+}

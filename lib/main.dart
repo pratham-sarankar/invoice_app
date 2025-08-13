@@ -9,7 +9,6 @@ import 'package:invoice_app/screens/invite_earn_screen.dart';
 import 'package:invoice_app/screens/invoice_settings.dart';
 import 'package:invoice_app/screens/login_screen.dart';
 import 'package:invoice_app/screens/main_screen.dart';
-import 'package:invoice_app/screens/menu_managment.dart';
 import 'package:invoice_app/screens/sales_report.dart';
 import 'package:invoice_app/screens/settings.dart';
 import 'package:invoice_app/screens/splash_screen.dart';

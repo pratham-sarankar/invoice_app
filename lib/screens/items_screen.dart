@@ -463,22 +463,18 @@ class _ItemsScreenState extends State<ItemsScreen> {
                       ],
                     ),
                     const Spacer(),
-                                         Container(
-                       padding: const EdgeInsets.all(6),
-                       decoration: BoxDecoration(
-                         color: Colors.grey[50],
-                         borderRadius: BorderRadius.circular(8),
-                         border: Border.all(
-                           color: Colors.grey.withOpacity(0.2),
-                           width: 1,
-                         ),
-                       ),
-                       child: Icon(
-                         Icons.tune,
-                         size: 16,
-                         color: primaryColor,
-                       ),
-                     ),
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[50],
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.grey.withOpacity(0.2),
+                          width: 1,
+                        ),
+                      ),
+                      child: Icon(Icons.tune, size: 16, color: primaryColor),
+                    ),
                   ],
                 ),
               ],
@@ -492,92 +488,85 @@ class _ItemsScreenState extends State<ItemsScreen> {
   void _showFilterDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Container(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Sort by',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom:
+                MediaQuery.of(context).viewInsets.bottom +
+                MediaQuery.of(context).padding.bottom,
+          ),
+          child: Container(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Sort by',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
                   ),
-                  const SizedBox(height: 16),
-                  Wrap(
-                    spacing: 8,
-                    children:
-                        [
-                              'A-Z',
-                              'Z-A',
-                              'Price: Low to High',
-                              'Price: High to Low',
-                            ]
-                            .map(
-                              (sort) => ChoiceChip(
-                                label: Text(sort),
-                                selected:
-                                    false, // This state variable is not used in the new code
-                                onSelected: (bool selected) {
-                                  // if (selected) {
-                                  //   setState(() {
-                                  //     _sortBy = sort;
-                                  //   });
-                                  //   this.setState(() {});
-                                  // }
-                                },
-                              ),
-                            )
-                            .toList(),
+                ),
+                SizedBox(height: 16),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children:
+                      ['A-Z', 'Z-A', 'Price: Low to High', 'Price: High to Low']
+                          .map(
+                            (sort) => ChoiceChip(
+                              label: Text(sort),
+                              selected: false,
+                              onSelected: (bool selected) {
+                                // TODO: Implement sorting logic
+                              },
+                            ),
+                          )
+                          .toList(),
+                ),
+                SizedBox(height: 24),
+                Text(
+                  'Filter by',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
                   ),
-                  const SizedBox(height: 24),
-                  const Text(
-                    'Filter by',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 16),
-                  Wrap(
-                    spacing: 8,
-                    children:
-                        ['All Items', 'Low Stock', 'In Stock', 'Not in Stock']
-                            .map(
-                              (filter) => ChoiceChip(
-                                label: Text(filter),
-                                selected:
-                                    false, // This state variable is not used in the new code
-                                onSelected: (bool selected) {
-                                  // if (selected) {
-                                  //   setState(() {
-                                  //     _stockFilter = filter;
-                                  //   });
-                                  //   this.setState(() {});
-                                  // }
-                                },
-                              ),
-                            )
-                            .toList(),
-                  ),
-                  const SizedBox(height: 16),
-                  SwitchListTile(
-                    title: const Text('In Online Store'),
-                    value:
-                        false, // This state variable is not used in the new code
-                    onChanged: (bool value) {
-                      // setState(() {
-                      //   _isOnlineStore = value;
-                      // });
-                      this.setState(() {});
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
+                ),
+                SizedBox(height: 16),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children:
+                      ['All Items', 'Low Stock', 'In Stock', 'Not in Stock']
+                          .map(
+                            (filter) => ChoiceChip(
+                              label: Text(filter),
+                              selected: false,
+                              onSelected: (bool selected) {
+                                // TODO: Implement filtering logic
+                              },
+                            ),
+                          )
+                          .toList(),
+                ),
+                SizedBox(height: 16),
+                SwitchListTile(
+                  title: Text('In Online Store'),
+                  value: false,
+                  onChanged: (bool value) {
+                    // TODO: Implement online store filter
+                  },
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
